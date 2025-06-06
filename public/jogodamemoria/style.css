@@ -41,12 +41,12 @@ p{
     cursor: url('../assets/cursorBlue.png'), auto;
     -webkit-box-shadow: 0 0.5rem 1rem rgba(17, 17, 17, 0.3);
     box-shadow: 0 0.3rem .8rem rgba(17, 17, 17, 0.3);
-   
+
 }
 .cardNContainer .jogoCard .card img{
     width: 105px;
     height: 105px;
-   
+
 }
 
 #palavra h2{
@@ -118,13 +118,44 @@ p{
     background: none;
 }
 
+.buttonsFooter .buttonSom button{
+    outline: none;
+    border: none;
+    background-color: #DDDDDD;
+    height: 60px;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.buttonsFooter .buttonSom button:hover{
+    background-color: #CCCCCC;
+    transition: 0.3s;
+}
+
+.buttonsFooter .buttonSom button.playing{
+    background-color: #05ABC4;
+}
+
 @media (max-width: 575.98px) { 
     .buttonsFooter .buttonDica button{
         height: 60px;
         width: 40px;
-       
+
     }
     .buttonsFooter  .buttonDica img{
+        height: 30px;
+        width: 60px;
+    }
+
+    .buttonsFooter .buttonSom button{
+        height: 60px;
+        width: 40px;
+    }
+
+    .buttonsFooter .buttonSom img{
         height: 30px;
         width: 60px;
     }

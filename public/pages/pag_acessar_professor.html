@@ -94,15 +94,29 @@
                         <a href=""><img src="../assets/iconeLamp.svg" alt="icone de uma lampada"></a>
                     </div>
                     <div class="buttonSom ms-2">
-                        <a href=""><img src="../assets/iconeSound.svg" alt="icone de audio"></a>
+                        <audio id="gameAudio" src="../assets/morning-funny-beat.mp3" loop></audio>
+                        <button id="btnSom" onclick="toggleAudio()"><img src="../assets/iconeSound.svg" alt="icone de audio"></button>
                     </div>
                 </div>
                 <div class="logout">
-                    <a href="pag_login_professor.html"><img src="../assets/logout.png" alt="sair"></a>
+                    <a href="../index.html"><img src="../assets/logout.png" alt="sair"></a>
                 </div>
             </div>
         </footer>
     </div>
+
+    <script>
+        function toggleAudio() {
+            const audio = document.getElementById('gameAudio');
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('btnSom').classList.add('playing');
+            } else {
+                audio.pause();
+                document.getElementById('btnSom').classList.remove('playing');
+            }
+        }
+    </script>
 </body>
 
 </html>

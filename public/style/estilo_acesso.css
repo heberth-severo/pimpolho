@@ -40,8 +40,8 @@ body {
 .containerJogos {
     position: relative;
     width: 900px !important;
-    margin: 0 auto !important;
-    height: 66.5vh!important;
+    margin: 2% auto !important;
+    height: 63vh!important;
 }
 
 .card-container{
@@ -81,11 +81,22 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.cardJogo .cardConteudo .cardConteudoJogo img {
+    max-width: 60px;
+    max-height: 60px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
 .cardJogo:first-child .cardConteudo .cardConteudoJogo {
     background-color: #038E00;
 }
 .cardJogo:nth-child(2) .cardConteudo .cardConteudoJogo{
-    background-color: #A80202;
+    background-color: #00d9ff;
+}
+.cardJogo:nth-child(3) .cardConteudo .cardConteudoJogo{
+    background-color: #ff0000;
 }
 .cardJogo:nth-child(2){
     position: relative;
@@ -97,7 +108,7 @@ body {
     align-items: center;
     flex-direction: column;
 }
-    
+
 .cardJogo .card-titulo p{
     font: 1.2rem 'Sniglet', cursive ;
     color:#000;
@@ -133,6 +144,27 @@ body {
     width: 70px;
 }
 
+.buttonsFooter .buttonSom button{
+    outline: none;
+    border: none;
+    background-color: #DDDDDD;
+    height: 60px;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.buttonsFooter .buttonSom button:hover{
+    background-color: #CCCCCC;
+    transition: 0.3s;
+}
+
+.buttonsFooter .buttonSom button.playing{
+    background-color: #05ABC4;
+}
+
 
 .buttonsFooter .buttonDica button{
     outline: none;
@@ -151,7 +183,7 @@ body {
 
 .buttonsFooter .buttonDica .offcanvas{
     width: 100%!important;
-    height: 150px;
+    height: 300px;
     border-radius:0 0 5px 5px;
     background-color: #ffffff!important;
     font-family:'Poppins';
@@ -159,6 +191,19 @@ body {
 .buttonsFooter .buttonDica .offcanvas .offcanvas-body{
     line-height: 1.6rem;
     font-weight: 400;
+    overflow-y: visible;
+    padding: 20px!important;
+}
+
+/* Specific styles for the game instructions offcanvas */
+#offcanvasTop {
+    height: 330px!important;
+}
+#offcanvasTop .offcanvas-body {
+    overflow-y: visible!important;
+    padding: 20px!important;
+    line-height: 1.6rem;
+    max-height: none!important;
 }
 
 .buttonsFooter .buttonDica .offcanvas .offcanvas-header button{
@@ -196,7 +241,7 @@ body {
         display: block;
         justify-content: center;
         align-items: center;
-    
+
     }
     .cardJogo:nth-child(2){
         position: absolute!important;
@@ -212,7 +257,7 @@ body {
         background-color: #DDDDDD;
         height: 60px;
         width: 40px;
-    
+
     }
     .buttonsFooter img{
         height: 30px;
@@ -225,9 +270,19 @@ body {
     .buttonsFooter .buttonDica button{
         height: 60px;
         width: 40px;
-       
+
     }
     .buttonsFooter  .buttonDica img{
+        height: 30px;
+        width: 60px;
+    }
+
+    .buttonsFooter .buttonSom button{
+        height: 60px;
+        width: 40px;
+    }
+
+    .buttonsFooter .buttonSom img{
         height: 30px;
         width: 60px;
     }

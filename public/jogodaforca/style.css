@@ -91,7 +91,7 @@ body {
     font-family:'Poppins' ;
     padding: .4em!important ;
     height: 2.6rem;
-    
+
 }
 
 .jogoForca .display .buttonExtras .buttonConferir button{
@@ -135,6 +135,38 @@ body {
     background: none;
 }
 
+.buttonsFooter .buttonSom button{
+    outline: none;
+    border: none;
+    background-color: #DDDDDD;
+    height: 60px;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.buttonsFooter .buttonSom button:hover{
+    background-color: #CCCCCC;
+    transition: 0.3s;
+}
+
+.buttonsFooter .buttonSom button.playing{
+    background-color: #05ABC4;
+}
+
+@media (max-width: 575.98px) {
+    .buttonsFooter .buttonSom button{
+        height: 60px;
+        width: 40px;
+    }
+    .buttonsFooter .buttonSom img{
+        height: 30px;
+        width: 60px;
+    }
+}
+
 
 @media (max-width: 575.98px) { 
     .section_jogo{
@@ -166,7 +198,7 @@ body {
     }
     .jogoForca  .controleJogo{
         display: block;
-        
+
     }
     .letra, .letraDigitada{
         width: 2rem;
@@ -189,8 +221,8 @@ body {
     .controleJogo .display{
         display: block!important;
     }
-    
-    
+
+
     .letraDigitada{
         display: inline;
         border: solid 2px #4D5E77;
@@ -198,7 +230,7 @@ body {
     }
     .jogoForca .display .controleJogo{
         display:block;
-        
+
     }
     .jogoForca .display .buttonExtras{
         justify-content: center;
@@ -211,12 +243,12 @@ body {
         padding: .3em!important ;
         height: 2rem;
         font-size: 1rem;
-        
+
     }
     .buttonsFooter .buttonDica button{
         height: 60px;
         width: 40px;
-       
+
     }
     .buttonsFooter  .buttonDica img{
         height: 30px;

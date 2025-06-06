@@ -39,15 +39,35 @@ app.use(express.static(staticPath))
 //     }
 // );
 
-const client = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    }
-  });
+// Configure database connection based on environment
+const client = new pg.Client(
+  process.env.NODE_ENV === 'production'
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+          rejectUnauthorized: false
+        }
+      }
+    : {
+        connectionString: process.env.DATABASE_URL
+      }
+);
 
-//conectar ao bd 
-client.connect();
+//conectar ao bd com retry
+const connectWithRetry = () => {
+  console.log('Attempting to connect to the database...');
+  client.connect()
+    .then(() => {
+      console.log('Database connection established successfully');
+    })
+    .catch(err => {
+      console.error('Failed to connect to the database:', err);
+      console.log('Retrying in 5 seconds...');
+      setTimeout(connectWithRetry, 5000);
+    });
+};
+
+connectWithRetry();
 
 
 // Acessando a rota pagina principal
@@ -58,7 +78,7 @@ client.connect();
 
 // Inserindo dados
 app.post('/aluno', async (req, res) =>{
-   
+
     // hashpassword= await bcrypt.hashSync(req.body.senha, 10)
     client.query(
         {
@@ -103,7 +123,7 @@ app.post('/professor', function (req, res) {
 app.get(
     '/aluno/:email/:senha',
     async (req, res) => { 
-        
+
         client.query(
             {
                 text: ' select al.senha, al.email, al.nome, al.idAluno, jo.nomejogo, aj.pontos	from tbAluno al left join tbAlunoJogo aj on al.idAluno = aj.idAluno left join tbJogo jo on aj.idJogo = jo.idJogo WHERE al.email= $1 and al.senha= $2 ',
@@ -123,10 +143,10 @@ app.get(
                         pontosjogo: tbAluno.pontos
                     }
                 );
-               
-                
+
+
             }
-            
+
         ).catch((error) => {
             console.error(error);
             res.status(404).json({

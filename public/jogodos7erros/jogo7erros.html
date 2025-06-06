@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../assets/favicon.svg" type="image/x-icon"> 
+    <title>Jogo dos 7 Erros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="../style/reset.css">
+    <link rel="stylesheet" href="../style/estilo.css">
+    <link rel="stylesheet" href="../style/estilo_acesso.css">
+    <link rel="stylesheet" href="../style/responsive.css">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="jogo7erros.js" defer></script>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <header class="headerAcesso">
+            <div class="img-logomini">
+                <img src="../assets/logoMini.svg" alt="imagem da logo">
+            </div>
+            <div class="sideBar m-2">
+                <div class="testeBotao text-end">
+                    <button class="btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">
+                        <img src="../assets/menu.svg" alt="">
+                    </button>
+                </div>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+                    aria-labelledby="offcanvasRightLabel">
+                    <div class="offcanvas-header">
+                        <div class="tituloSidebar ms-5">
+                            <h5 id="nameAluno">Nome</h5>
+                        </div>
+                        <button type="button" class=" text-reset m-3" data-bs-dismiss="offcanvas" aria-label="Close">
+                            <img src="../assets/fechar.svg" alt="fechar">
+                        </button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="text-center">
+                            <li>Ano/Turma: 3º Ano</li>
+                            <li id="jogMemoria" class="mt-3"> </li>
+                            <li id="jogForca"></li>
+                            <li id="jog7Erros"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="section_jogo">
+            <div class="jogo7erros" id="jogo7erros">
+                <div class="modos-jogo">
+                    <button id="btnCriar" class="btn btn-primary">Modo Criar</button>
+                    <button id="btnJogar" class="btn btn-success">Modo Jogar</button>
+                </div>
+
+                <!-- Modo Criar -->
+                <div id="modoCriar" class="modo-container">
+                    <h3>Crie seu desenho original</h3>
+                    <div class="canvas-container">
+                        <canvas id="canvasOriginal" width="625" height="400"></canvas>
+                    </div>
+                    <div class="ferramentas">
+                        <div class="cores">
+                            <label for="corPincel">Cor</label>
+                            <input type="color" id="corPincel" value="#000000">
+                        </div>
+                        <div class="tamanho">
+                            <label for="tamanhoPincel">Tamanho</label>
+                            <input type="range" id="tamanhoPincel" min="1" max="20" value="5">
+                        </div>
+                        <div class="borracha">
+                            <button id="btnBorracha" class="btn btn-light">
+                                <img src="../assets/borracha.png" alt="Borracha" width="40" height="40">
+                            </button>
+                        </div>
+                        <div class="botoes">
+                            <button id="btnLimpar" class="btn btn-warning">Limpar</button>
+                            <button id="btnSalvar" class="btn btn-primary">Salvar Desenho</button>
+                        </div>
+                    </div>
+
+                    <div id="modificarDesenho" class="mt-4" style="display: none;">
+                        <h3>Agora modifique o desenho (crie 7 diferenças)</h3>
+                        <div class="canvas-container">
+                            <canvas id="canvasModificado" width="625" height="400"></canvas>
+                        </div>
+                        <div class="botoes mt-2">
+                            <button id="btnSalvarJogo" class="btn btn-success">Salvar Jogo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modo Jogar -->
+                <div id="modoJogar" class="modo-container" style="display: none;">
+                    <h3>Encontre as 7 diferenças</h3>
+                    <div class="contadores">
+                        <div class="contador">Diferenças encontradas: <span id="diferencasEncontradas">0</span>/7</div>
+                        <div class="contador">Pontuação: <span id="pontuacao">0</span></div>
+                    </div>
+                    <div class="canvas-container-jogo">
+                        <div class="canvas-item">
+                            <h4>Desenho Original</h4>
+                            <div class="canvas-wrapper">
+                                <canvas id="canvasJogoOriginal" width="625" height="400"></canvas>
+                            </div>
+                        </div>
+                        <div class="canvas-item">
+                            <h4>Encontre as diferenças</h4>
+                            <div class="canvas-wrapper">
+                                <canvas id="canvasJogoModificado" width="625" height="400"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ferramentas mt-3">
+                        <div class="borracha">
+                            <button id="btnRabisco" class="btn btn-light">
+                                <img src="../assets/pincel-lapis.png" alt="Rabisco" width="40" height="40">
+                            </button>
+                        </div>
+                        <div class="cores">
+                            <label for="corRabisco">Cor</label>
+                            <input type="color" id="corRabisco" value="#FF0000">
+                        </div>
+                        <div class="tamanho">
+                            <label for="tamanhoRabisco">Tamanho</label>
+                            <input type="range" id="tamanhoRabisco" min="1" max="10" value="3">
+                        </div>
+                        <div class="botoes">
+                            <button id="btnLimparRabiscos" class="btn btn-warning">Limpar Rabiscos</button>
+                            <button id="btnNovoJogo" class="btn btn-primary">Novo Jogo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensagem de vitória -->
+                <div id="mensagemVitoria" class="mensagem-vitoria" style="display: none;">
+                    <div class="mensagem-conteudo">
+                        <h2>Parabéns!</h2>
+                        <p>Você encontrou todas as diferenças!</p>
+                        <p>Pontuação: <span id="pontuacaoFinal">0</span></p>
+                        <button id="btnJogarNovamente" class="btn btn-success">Jogar Novamente</button>
+                    </div>
+                </div>
+
+                <!-- Modal de confirmação para limpar o desenho -->
+                <div id="modalConfirmacaoLimpar" class="mensagem-vitoria" style="display: none;">
+                    <div class="mensagem-conteudo">
+                        <h2>Confirmação</h2>
+                        <p>Tem certeza que deseja limpar o desenho?</p>
+                        <div class="botoes modal-botoes">
+                            <button id="btnCancelarLimpar" class="btn btn-danger">Não</button>
+                            <button id="btnConfirmarLimpar" class="btn btn-success">Sim</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class=" mb-3">
+            <div class="footerPaginaAcessar">
+                <div class="buttonsFooter">
+                    <div class="buttonDica ms-2">
+                        <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
+                            <img src="../assets/iconeLamp.svg" alt="icone de uma lampada">
+                        </button>
+                        <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+                            <div class="offcanvas-header">
+                              <h3 id="offcanvasTopLabel" class="m-3 h2">Como jogar o Jogo dos 7 Erros?</h3>
+                              <button class="btn-close text-reset h2" data-bs-dismiss="offcanvas" aria-label="Close">X</button>
+                            </div>
+                            <div class="offcanvas-body ms-4 h6 ">
+                                <h4>Modo Criar:</h4>
+                                <p>1. Desenhe uma imagem no quadro de desenho.<br>
+                                2. Clique em "Salvar Desenho".<br>
+                                3. Modifique o desenho criando 7 diferenças.<br>
+                                4. Clique em "Salvar Jogo" para que outros possam jogar.</p>
+
+                                <h4>Modo Jogar:</h4>
+                                <p>1. Observe os dois desenhos lado a lado.<br>
+                                2. Clique nas diferenças que encontrar no desenho da direita.<br>
+                                3. Encontre todas as 7 diferenças para ganhar!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="buttonSom ms-2">
+                        <audio id="gameAudio" src="../assets/morning-funny-beat.mp3" loop></audio>
+                        <button id="btnSom" onclick="toggleAudio()"><img src="../assets/iconeSound.svg" alt="icone de audio"></button>
+                    </div>
+                    <div class="buttonHome ms-2">
+                        <a href="../pages/pag_acessar_estudante.html"><img src="../assets/iconeHome.svg"
+                                alt="icone de uma casa"></a>
+                    </div>
+                </div>
+                <div class="logout">
+                    <a href="../index.html"><img src="../assets/logout.png" alt="sair"></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</body>
+<script>
+    $('#nameAluno').text(localStorage.getItem('nome_estudante'))
+    let jogos = JSON.parse(localStorage.getItem('nome_jogo'))
+
+    for(let jogo of jogos){
+
+       if(jogo.nomejogo.includes('memória')){
+           $('#jogMemoria').text(jogo.nomejogo+ ' - ' + jogo.pontos)
+       }
+       if(jogo.nomejogo.includes('complete')){
+           $('#jogForca').text(jogo.nomejogo+ ' - ' + jogo.pontos)
+       }
+       if(jogo.nomejogo.includes('7 erros')){
+           $('#jog7Erros').text(jogo.nomejogo+ ' - ' + jogo.pontos)
+       }
+    }
+
+    function toggleAudio() {
+        const audio = document.getElementById('gameAudio');
+        if (audio.paused) {
+            audio.play();
+            document.getElementById('btnSom').classList.add('playing');
+        } else {
+            audio.pause();
+            document.getElementById('btnSom').classList.remove('playing');
+        }
+    }
+</script>
+</html>

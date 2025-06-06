@@ -54,9 +54,10 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="text-center">
-                            <li>Ano/Turma: 3º Ano</li>
+                            <li>Ano/Turma: 4º Ano</li>
                             <li id="jogMemoria" class="mt-3"></li>
                             <li id="jogForca"></li>
+                            <li id="jog7Erros"></li>
                         </ul>
                     </div>
                 </div>
@@ -82,13 +83,27 @@
                     <a href="../jogodaforca/jogoForca.html">
                         <div class="cardConteudo">
                             <div class="cardConteudoJogo">
-                                <img src="../assets/iconeJogo.svg" alt="">
+                                <img src="../assets/hangman-game.png" alt="">
                             </div>
                         </div>
                     </a>
                     <div class="card-titulo">
                         <p>Jogo da</p>
                         <p>Forca</p>
+                    </div>
+                </div>
+
+                <div class="cardJogo">
+                    <a href="../jogodos7erros/jogo7erros.html">
+                        <div class="cardConteudo">
+                            <div class="cardConteudoJogo">
+                                <img src="../assets/canva.png" alt="">
+                            </div>
+                        </div>
+                    </a>
+                    <div class="card-titulo">
+                        <p>Jogo dos</p>
+                        <p>7 Erros</p>
                     </div>
                 </div>
             </div>
@@ -106,20 +121,22 @@
                               <button class="btn-close text-reset h2" data-bs-dismiss="offcanvas" aria-label="Close">X</button>
                             </div>
                             <div class="offcanvas-body ms-4 h6 ">
-                                - Para jogar o jogo da memória, clique no círculo verde.<br>
-                                - Para jogar o jogo da forca, clique no círculo vermelho.
+                                - Para jogar o Jogo da Memória, clique no primeiro card.<br>
+                                - Para jogar o Jogo da Forca, clique no segundo card.<br>
+                                - Para jogar o Jogo dos 7 Erros, clique no terceiro card.
                             </div>
                         </div>
                     </div>
                     <div class="buttonSom ms-2">
-                        <a href=""><img src="../assets/iconeSound.svg" alt="icone de audio"></a>
+                        <audio id="gameAudio" src="../assets/morning-funny-beat.mp3" loop></audio>
+                        <button id="btnSom" onclick="toggleAudio()"><img src="../assets/iconeSound.svg" alt="icone de audio"></button>
                     </div>
                     <div class="buttonHome ms-2">
                         <a href="#"><img src="../assets/iconeHome.svg" alt="icone de uma casa"></a>
                     </div>
                 </div>
                 <div class="logout">
-                    <a href="pag_login_estudante.html"><img src="../assets/logout.png" alt="sair"></a>
+                    <a href="../index.html"><img src="../assets/logout.png" alt="sair"></a>
                 </div>
             </div>
         </footer>
@@ -130,12 +147,26 @@
          let jogos = JSON.parse(localStorage.getItem('nome_jogo'))
 
          for(let jogo of jogos){
-            
+
             if(jogo.nomejogo.includes('memória')){
                 $('#jogMemoria').text(jogo.nomejogo+ ' : ' + jogo.pontos)
             }
             if(jogo.nomejogo.includes('complete')){
                 $('#jogForca').text(jogo.nomejogo+ ' : ' + jogo.pontos)
+            }
+            if(jogo.nomejogo.includes('7 erros')){
+                $('#jog7Erros').text(jogo.nomejogo+ ' : ' + jogo.pontos)
+            }
+         }
+
+         function toggleAudio() {
+            const audio = document.getElementById('gameAudio');
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('btnSom').classList.add('playing');
+            } else {
+                audio.pause();
+                document.getElementById('btnSom').classList.remove('playing');
             }
          }
     </script>
