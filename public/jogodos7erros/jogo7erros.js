@@ -817,7 +817,7 @@ function somaPontos() {
     return pontos += 10;
 }
 
-// Salvar pontuação no localStorage
+// Salvar pontuação no localStorage e no banco de dados
 function salvarPontuacao() {
     let jogos = JSON.parse(localStorage.getItem('nome_jogo')) || [];
 
@@ -841,4 +841,9 @@ function salvarPontuacao() {
 
     // Salvar a lista atualizada
     localStorage.setItem('nome_jogo', JSON.stringify(jogos));
+
+    // Registrar pontuação no banco de dados (ID 3 = Jogo dos 7 Erros)
+    if (typeof registrarPontuacao === 'function') {
+        registrarPontuacao(3, pontuacao);
+    }
 }

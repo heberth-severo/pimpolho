@@ -158,6 +158,7 @@ function acessar() {
                 success: function (resposta) {
                     localStorage.removeItem('nome_estudante');
                     localStorage.setItem('nome_estudante', resposta.nome);
+                    localStorage.setItem('id_estudante', resposta.idAluno);
                     localStorage.setItem('nome_jogo', JSON.stringify(resposta.nomejogo));
                     localStorage.setItem('pontos_jogo', resposta.pontosjogo);
                     window.location.href = "pag_acessar_estudante.html";
@@ -295,6 +296,33 @@ function consultarJogo() {
 /*------------------------------------------------------------------------------------------------------- */
 // Fazer o post dos pontos dos jogos
 
-function atualizar() {
-    windows.onload();
+/**
+ * Função para registrar a pontuação de um jogo
+ * @param {number} idJogo - ID do jogo (1: Jogo da Forca, 2: Jogo da Memória, 3: Jogo dos 7 Erros, 4: Jogo Complete Palavras)
+ * @param {number} pontos - Pontuação obtida no jogo
+ */
+function registrarPontuacao(idJogo, pontos) {
+    const idAluno = localStorage.getItem('id_estudante');
+
+    if (!idAluno) {
+        console.error('ID do aluno não encontrado. Faça login novamente.');
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: `${window.location.origin}/registrar-pontuacao`,
+        data: JSON.stringify({
+            idAluno: idAluno,
+            idJogo: idJogo,
+            pontos: pontos
+        }),
+        contentType: 'application/json',
+        success: function(resposta) {
+            console.log('Pontuação registrada com sucesso:', resposta);
+        },
+        error: function(erro) {
+            console.error('Erro ao registrar pontuação:', erro);
+        }
+    });
 }

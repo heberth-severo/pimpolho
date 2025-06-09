@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="style.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/funcionalidades.js"></script>
     <script  src="jogoForca.js" defer></script>
     <!--  -->
 </head>
@@ -89,6 +90,15 @@
 
                     <div class="mensagemFinal" id="mensagemFinal"></div>
                     <div class="qtdLetraDigitada" id="qtdLetraDigitada"></div>
+                </div>
+            </div>
+
+            <!-- Modal de dica -->
+            <div id="modalDica" class="mensagem-modal" style="display: none;">
+                <div class="mensagem-conteudo">
+                    <h2>Dica!</h2>
+                    <p id="textoDica">Aqui vai aparecer a dica sobre a palavra.</p>
+                    <button id="btnFecharDica" class="btn btn-success">Entendi</button>
                 </div>
             </div>
         </section>

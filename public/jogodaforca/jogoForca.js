@@ -72,7 +72,7 @@ function jogar() {
         if (!acertos) {
             erros++
             desenhaForca(erros);
-            
+
             // document.querySelectorAll("#letrasDigitadas")
         } else if (acertos) {
             console.log(right);
@@ -86,17 +86,23 @@ function jogar() {
         }else if(right == palavra.length){
             alert("PARABÉNS!")
             console.log(pontuacao);
+
+            // Registrar pontuação no banco de dados (ID 1 = Jogo da Forca)
+            if (typeof registrarPontuacao === 'function') {
+                registrarPontuacao(1, pontuacao);
+            }
+
             setTimeout(() => {iniciar()}, 3000)
         }
 
     }
 
-    
+
 
 }
 
 function marca_chute_correto(letra_digitada, palavra_secreta) {
-    
+
     for (pos in palavra_secreta) {
         if (letra_digitada == palavra_secreta[pos]) {
             ja_digitada.push(letra_digitada)
@@ -111,7 +117,7 @@ function marca_chute_correto(letra_digitada, palavra_secreta) {
 }
 
 function desenhaForca(erros) {
-    
+
     switch (erros) {
         case 1:
             $('#imgForco').attr('src','assets/erro1.png')
@@ -147,12 +153,45 @@ function limparTela() {
     linha.innerHTML = "";
 }
 
-let dica = () => {
-    alert("Essa palavra já vimos em sala de aula");
-    jog.focus();
+// Objeto com dicas para cada palavra
+const dicas = {
+    "CHAVEIRO": "Objeto usado para guardar chaves",
+    "CHAVE": "Objeto usado para abrir portas",
+    "BONECA": "Brinquedo que parece uma pessoa pequena",
+    "CHUVEIRO": "Usado para tomar banho",
+    "MACA": "Fruta vermelha ou verde",
+    "BANANA": "Fruta amarela",
+    "MELANCIA": "Fruta grande com interior vermelho",
+    "DADO": "Objeto com números usado em jogos",
+    "VACA": "Animal que produz leite",
+    "CHINELO": "Calçado usado em casa",
+    "SAPATO": "Calçado usado na rua"
+};
 
+// Função para mostrar a dica
+function conhecer() {
+    const modal = document.getElementById('modalDica');
+    const textoDica = document.getElementById('textoDica');
+
+    // Verifica se uma palavra foi sorteada
+    if (!palavra) {
+        textoDica.textContent = "Sorteie uma palavra primeiro!";
+    } else {
+        // Busca a dica para a palavra atual
+        const dica = dicas[palavra] || "Esta é uma palavra que você já conhece!";
+        textoDica.textContent = dica;
+    }
+
+    // Mostra o modal
+    modal.style.display = 'flex';
 }
 
+// Adiciona evento para fechar o modal
+document.addEventListener('DOMContentLoaded', function() {
+    const btnFecharDica = document.getElementById('btnFecharDica');
+    btnFecharDica.addEventListener('click', function() {
+        document.getElementById('modalDica').style.display = 'none';
+    });
+});
 
 window.addEventListener('load', iniciar);
-

@@ -76,7 +76,7 @@ function comercarJogo() {
 
 //Embaralhando as imagens
 function embaralharImages(arr) {
-    
+
     for (let i = arr.length - 1; i > 0; i--) {
         // Escolhendo elemento aleatório
         const j = Math.floor(Math.random() * (i + 1));
@@ -154,6 +154,11 @@ function clicandoNaImagem(i) {
     }
 
     if (contarPontos == 8) {
+        // Registrar pontuação no banco de dados (ID 2 = Jogo da Memória)
+        if (typeof registrarPontuacao === 'function') {
+            registrarPontuacao(2, pontuacao);
+        }
+
         $('#btReinicio').on('click', function () {
             onload();
         });

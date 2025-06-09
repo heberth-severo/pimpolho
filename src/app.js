@@ -94,7 +94,13 @@ app.post('/aluno', async (req, res) =>{
                 }
             )
         }
-    );
+    ).catch(error => {
+        console.error('Error registering student:', error);
+        res.status(500).json({
+            status: 'Error',
+            message: 'Failed to register student'
+        });
+    });
 
 });
 
@@ -114,7 +120,13 @@ app.post('/professor', function (req, res) {
                 }
             )
         }
-    );
+    ).catch(error => {
+        console.error('Error registering professor:', error);
+        res.status(500).json({
+            status: 'Error',
+            message: 'Failed to register professor'
+        });
+    });
 
 });
 
@@ -139,6 +151,7 @@ app.get(
                         email: tbAluno.email,
                         senha: tbAluno.senha,
                         nome: tbAluno.nome,
+                        idAluno: tbAluno.idaluno,
                         nomejogo: ret.rows,
                         pontosjogo: tbAluno.pontos
                     }
@@ -208,7 +221,13 @@ app.post('/aluno/atualizar', function (req, res) {
                 }
             )
         }
-    );
+    ).catch(error => {
+        console.error('Error updating student:', error);
+        res.status(500).json({
+            status: 'Error',
+            message: 'Failed to update student'
+        });
+    });
 
 });
 
@@ -230,7 +249,13 @@ app.post('/professor/atualizar', function (req, res) {
                 }
             )
         }
-    );
+    ).catch(error => {
+        console.error('Error updating professor:', error);
+        res.status(500).json({
+            status: 'Error',
+            message: 'Failed to update professor'
+        });
+    });
 
 });
 
@@ -264,12 +289,91 @@ app.get(
                     }
                 );
             }
-        );
+        ).catch(error => {
+            console.error('Error querying game data:', error);
+            res.status(500).json({
+                status: 'Error',
+                message: 'Failed to retrieve game data'
+            });
+        });
 
     }
 );
 
 
+
+/*------------------------------------------------------------------------------------------------------- */
+
+// Endpoint para registrar pontuação de jogos
+app.post('/registrar-pontuacao', function (req, res) {
+    const idAluno = req.body.idAluno;
+    const idJogo = req.body.idJogo;
+    const pontos = req.body.pontos;
+
+    // Verificar se já existe um registro para este aluno e jogo
+    client.query(
+        {
+            text: "SELECT * FROM tbAlunoJogo WHERE idAluno = $1 AND idJogo = $2",
+            values: [idAluno, idJogo]
+        }
+    ).then(
+        function (ret) {
+            if (ret.rows.length > 0) {
+                // Se já existe um registro, atualizar os pontos
+                client.query(
+                    {
+                        text: "UPDATE tbAlunoJogo SET pontos = $1 WHERE idAluno = $2 AND idJogo = $3",
+                        values: [pontos, idAluno, idJogo]
+                    }
+                ).then(
+                    function (updateRet) {
+                        res.json(
+                            {
+                                status: 'OK',
+                                message: 'Pontuação atualizada com sucesso'
+                            }
+                        );
+                    }
+                ).catch(error => {
+                    console.error('Error updating score:', error);
+                    res.status(500).json({
+                        status: 'Error',
+                        message: 'Failed to update score'
+                    });
+                });
+            } else {
+                // Se não existe um registro, inserir um novo
+                client.query(
+                    {
+                        text: "INSERT INTO tbAlunoJogo(idAluno, idJogo, pontos) VALUES($1, $2, $3)",
+                        values: [idAluno, idJogo, pontos]
+                    }
+                ).then(
+                    function (insertRet) {
+                        res.json(
+                            {
+                                status: 'OK',
+                                message: 'Pontuação registrada com sucesso'
+                            }
+                        );
+                    }
+                ).catch(error => {
+                    console.error('Error inserting score:', error);
+                    res.status(500).json({
+                        status: 'Error',
+                        message: 'Failed to insert score'
+                    });
+                });
+            }
+        }
+    ).catch(error => {
+        console.error('Error checking existing score:', error);
+        res.status(500).json({
+            status: 'Error',
+            message: 'Failed to check existing score'
+        });
+    });
+});
 
 /*------------------------------------------------------------------------------------------------------- */
 

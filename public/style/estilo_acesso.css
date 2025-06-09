@@ -20,8 +20,8 @@ body {
     transition: 0.3s;
 }
 .offcanvas {
-    width: 200px!important;
-    height: 200px;
+    width: 240px!important;
+    height: 270px;
     border-radius:10px;
     background-color: #DDDDDD!important;
     font-family: 'Poppins';
