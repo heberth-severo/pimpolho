@@ -159,6 +159,36 @@ function clicandoNaImagem(i) {
             registrarPontuacao(2, pontuacao);
         }
 
+        // Salvar pontuação no localStorage
+        console.log("Salvando pontuação do Jogo da Memória. Pontuação:", pontuacao);
+
+        let jogos = JSON.parse(localStorage.getItem('nome_jogo')) || [];
+        console.log("Jogos atuais:", jogos);
+
+        // Verificar se o jogo já existe na lista
+        let jogoExiste = false;
+        for (let i = 0; i < jogos.length; i++) {
+            if (jogos[i].nomejogo.includes('Memória')) {
+                jogos[i].pontos = pontuacao;
+                jogoExiste = true;
+                console.log("Jogo encontrado na lista, atualizando pontuação para:", pontuacao);
+                break;
+            }
+        }
+
+        // Se o jogo não existir, adicionar à lista
+        if (!jogoExiste) {
+            console.log("Jogo não encontrado na lista, adicionando com pontuação:", pontuacao);
+            jogos.push({
+                nomejogo: 'Jogo da Memória',
+                pontos: pontuacao
+            });
+        }
+
+        // Salvar a lista atualizada
+        localStorage.setItem('nome_jogo', JSON.stringify(jogos));
+        console.log("Lista de jogos atualizada no localStorage:", jogos);
+
         $('#btReinicio').on('click', function () {
             onload();
         });

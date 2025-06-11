@@ -618,6 +618,7 @@ function calcularDiferencas() {
 function carregarJogo() {
     // Resetar contadores
     diferencasEncontradas = 0;
+    pontos = 0; // Reset pontos to ensure score starts from 0
     pontuacao = 0;
     document.getElementById('diferencasEncontradas').textContent = diferencasEncontradas;
     document.getElementById('pontuacao').textContent = pontuacao;
@@ -819,7 +820,10 @@ function somaPontos() {
 
 // Salvar pontuação no localStorage e no banco de dados
 function salvarPontuacao() {
+    console.log("Salvando pontuação do Jogo dos 7 Erros. Pontuação:", pontuacao);
+
     let jogos = JSON.parse(localStorage.getItem('nome_jogo')) || [];
+    console.log("Jogos atuais:", jogos);
 
     // Verificar se o jogo já existe na lista
     let jogoExiste = false;
@@ -827,12 +831,14 @@ function salvarPontuacao() {
         if (jogos[i].nomejogo.includes('7 erros')) {
             jogos[i].pontos = pontuacao;
             jogoExiste = true;
+            console.log("Jogo encontrado na lista, atualizando pontuação para:", pontuacao);
             break;
         }
     }
 
     // Se o jogo não existir, adicionar à lista
     if (!jogoExiste) {
+        console.log("Jogo não encontrado na lista, adicionando com pontuação:", pontuacao);
         jogos.push({
             nomejogo: 'Jogo dos 7 erros',
             pontos: pontuacao
@@ -841,9 +847,16 @@ function salvarPontuacao() {
 
     // Salvar a lista atualizada
     localStorage.setItem('nome_jogo', JSON.stringify(jogos));
+    console.log("Lista de jogos atualizada no localStorage:", jogos);
 
     // Registrar pontuação no banco de dados (ID 3 = Jogo dos 7 Erros)
+    const idAluno = localStorage.getItem('id_estudante');
+    console.log("ID do aluno:", idAluno);
+
     if (typeof registrarPontuacao === 'function') {
+        console.log("Função registrarPontuacao encontrada, chamando com ID 3 e pontuação:", pontuacao);
         registrarPontuacao(3, pontuacao);
+    } else {
+        console.error("Função registrarPontuacao não encontrada! Verifique se o arquivo funcionalidades.js está sendo carregado corretamente.");
     }
 }
