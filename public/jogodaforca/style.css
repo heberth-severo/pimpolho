@@ -4,6 +4,7 @@
 body {
     background-image: url('assets/capa_jogo.svg');
     background-repeat: no-repeat;
+    overflow: hidden;
 }
 
 .section_jogo{
@@ -176,30 +177,31 @@ body {
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    max-width: 400px;
+    max-width: 600px;
     width: 90%;
 }
 
 .mensagem-conteudo h2 {
-    color: #e0464c;
+    color: #2ba75e;
     margin-bottom: 15px;
-    font-size: 2em;
+    font-size: 3em;
 }
 
 .mensagem-conteudo p {
     font-size: 1.5em;
-    margin-bottom: 20px;
+    margin: 30px 0 !important;
     font-family: 'Poppins';
 }
 
 .mensagem-conteudo button {
-    padding: 10px 20px;
-    font-size: 1.1em;
+    font-size: 1.3em;
     background-color: #008037;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    padding: 0 15px !important;
+    margin-bottom: 10px !important;
 }
 
 @media (max-width: 575.98px) {

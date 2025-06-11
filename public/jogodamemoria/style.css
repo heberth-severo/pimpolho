@@ -4,6 +4,7 @@
 body {
     background-image: url('imgs/capa_jogo.svg');
     background-repeat: no-repeat;
+    overflow: hidden;
 }
 
 #nav_info{
