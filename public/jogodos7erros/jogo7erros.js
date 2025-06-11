@@ -828,7 +828,7 @@ function salvarPontuacao() {
     // Verificar se o jogo já existe na lista
     let jogoExiste = false;
     for (let i = 0; i < jogos.length; i++) {
-        if (jogos[i].nomejogo.includes('7 erros')) {
+        if (jogos[i].nomejogo.toLowerCase().includes('7 erros')) {
             jogos[i].pontos = pontuacao;
             jogoExiste = true;
             console.log("Jogo encontrado na lista, atualizando pontuação para:", pontuacao);

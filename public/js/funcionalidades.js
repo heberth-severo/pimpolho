@@ -161,8 +161,12 @@ function acessar() {
                     localStorage.setItem('id_estudante', resposta.idAluno);
                     localStorage.setItem('nome_jogo', JSON.stringify(resposta.nomejogo));
                     localStorage.setItem('pontos_jogo', resposta.pontosjogo);
-                    window.location.href = "pag_acessar_estudante.html";
 
+                    // Armazenar email e senha para atualizações futuras
+                    localStorage.setItem('email_estudante', email);
+                    localStorage.setItem('senha_estudante', senha);
+
+                    window.location.href = "pag_acessar_estudante.html";
                 },
                 error: function (resposta) {
                     alert(`Usuário não está cadastrado!`);
@@ -320,9 +324,78 @@ function registrarPontuacao(idJogo, pontos) {
         contentType: 'application/json',
         success: function(resposta) {
             console.log('Pontuação registrada com sucesso:', resposta);
+
+            // Após registrar a pontuação, buscar os dados atualizados do aluno
+            atualizarDadosAluno();
         },
         error: function(erro) {
             console.error('Erro ao registrar pontuação:', erro);
         }
     });
+}
+
+/**
+ * Função para atualizar os dados do aluno após o jogo
+ */
+function atualizarDadosAluno() {
+    const email = localStorage.getItem('email_estudante');
+    const senha = localStorage.getItem('senha_estudante');
+
+    if (!email || !senha) {
+        console.error('Dados de login não encontrados.');
+        return;
+    }
+
+    $.ajax({
+        type: 'GET',
+        url: `${window.location.origin}/aluno/${email}/${senha}`,
+        success: function(resposta) {
+            // Atualizar os dados no localStorage
+            localStorage.setItem('nome_estudante', resposta.nome);
+            localStorage.setItem('id_estudante', resposta.idAluno);
+            localStorage.setItem('nome_jogo', JSON.stringify(resposta.nomejogo));
+            localStorage.setItem('pontos_jogo', resposta.pontosjogo);
+
+            // Se estiver na página do estudante, atualizar a exibição
+            if (window.location.href.includes('pag_acessar_estudante.html')) {
+                atualizarExibicaoPontuacao();
+            }
+        },
+        error: function(erro) {
+            console.error('Erro ao atualizar dados do aluno:', erro);
+        }
+    });
+}
+
+/**
+ * Função para atualizar a exibição da pontuação na página do estudante
+ */
+function atualizarExibicaoPontuacao() {
+    $('#nameAluno').text(localStorage.getItem('nome_estudante'));
+    let jogos = JSON.parse(localStorage.getItem('nome_jogo'));
+    let totalPontos = 0;
+
+    // Limpar pontuações anteriores
+    $('#jogMemoria').text('');
+    $('#jogForca').text('');
+    $('#jog7Erros').text('');
+
+    for(let jogo of jogos){
+        // Somar pontos ao total
+        totalPontos += parseInt(jogo.pontos || 0);
+
+        if(jogo.nomejogo.includes('memória') || jogo.nomejogo.includes('Memória')){
+            $('#jogMemoria').text(jogo.nomejogo+ ' : ' + jogo.pontos);
+        }
+        if(jogo.nomejogo.includes('Forca') || jogo.nomejogo.includes('forca')){
+            $('#jogForca').text(jogo.nomejogo+ ' : ' + jogo.pontos);
+        }
+        if(jogo.nomejogo.toLowerCase().includes('7 erros')){
+            $('#jog7Erros').text(jogo.nomejogo+ ' : ' + jogo.pontos);
+        }
+    }
+
+    // Atualizar o total de pontos
+    $('.offcanvas-body ul li:last-child').remove(); // Remover o total antigo
+    $('.offcanvas-body ul').append('<li class="mt-3 fw-bold">Total de Pontos: ' + totalPontos + '</li>');
 }
