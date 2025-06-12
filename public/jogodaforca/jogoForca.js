@@ -80,11 +80,16 @@ function jogar() {
         }
 
         if(erros == 7) {
-            // mostrar desenho final da forca
-            alert("Não foi dessa vez! A palavra sorteada era " + palavra)
+            // Mostrar modal de derrota
+            document.getElementById('palavraCorreta').textContent = palavra;
+            document.getElementById('mensagemDerrota').style.display = 'flex';
+
             // desabilitar o input para digitar e habilitar ao sortear uma palavra ou reiniciar;
         }else if(right == palavra.length){
-            alert("PARABÉNS!")
+            // Mostrar modal de vitória
+            document.getElementById('pontuacaoFinal').textContent = pontuacao;
+            document.getElementById('mensagemVitoria').style.display = 'flex';
+
             console.log(pontuacao);
 
             // Registrar pontuação no banco de dados (ID 1 = Jogo da Forca)
@@ -121,8 +126,6 @@ function jogar() {
             // Salvar a lista atualizada
             localStorage.setItem('nome_jogo', JSON.stringify(jogos));
             console.log("Lista de jogos atualizada no localStorage:", jogos);
-
-            setTimeout(() => {iniciar()}, 3000)
         }
 
     }
@@ -216,11 +219,36 @@ function conhecer() {
     modal.style.display = 'flex';
 }
 
-// Adiciona evento para fechar o modal
+// Adiciona eventos para os modais
 document.addEventListener('DOMContentLoaded', function() {
+    // Modal de dica
     const btnFecharDica = document.getElementById('btnFecharDica');
     btnFecharDica.addEventListener('click', function() {
         document.getElementById('modalDica').style.display = 'none';
+    });
+
+    // Modal de vitória
+    const btnJogarNovamente = document.getElementById('btnJogarNovamente');
+    btnJogarNovamente.addEventListener('click', function() {
+        document.getElementById('mensagemVitoria').style.display = 'none';
+        iniciar();
+    });
+
+    const btnVoltarInicio = document.getElementById('btnVoltarInicio');
+    btnVoltarInicio.addEventListener('click', function() {
+        window.location.href = '../pages/pag_acessar_estudante.html';
+    });
+
+    // Modal de derrota
+    const btnJogarNovamentePerdeu = document.getElementById('btnJogarNovamentePerdeu');
+    btnJogarNovamentePerdeu.addEventListener('click', function() {
+        document.getElementById('mensagemDerrota').style.display = 'none';
+        iniciar();
+    });
+
+    const btnVoltarInicioPerdeu = document.getElementById('btnVoltarInicioPerdeu');
+    btnVoltarInicioPerdeu.addEventListener('click', function() {
+        window.location.href = '../pages/pag_acessar_estudante.html';
     });
 });
 

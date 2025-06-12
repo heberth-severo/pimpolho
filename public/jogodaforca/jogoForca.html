@@ -102,6 +102,29 @@
                     <button id="btnFecharDica" class="btn btn-success">Entendi</button>
                 </div>
             </div>
+
+            <div id="mensagemVitoria" class="mensagem-modal" style="display: none;">
+                <div class="mensagem-conteudo">
+                    <h2>Parabéns!</h2>
+                    <p>Você acertou a palavra!</p>
+                    <p>Pontuação: <span id="pontuacaoFinal">0</span></p>
+                    <div class="botoes-modal">
+                        <button id="btnJogarNovamente" class="btn btn-success">Jogar Novamente</button>
+                        <button id="btnVoltarInicio" class="btn btn-primary">Voltar ao Início</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mensagemDerrota" class="mensagem-modal" style="display: none;">
+                <div class="mensagem-conteudo">
+                    <h2>Não foi dessa vez!</h2>
+                    <p>A palavra era: <span id="palavraCorreta"></span></p>
+                    <div class="botoes-modal">
+                        <button id="btnJogarNovamentePerdeu" class="btn btn-success">Jogar Novamente</button>
+                        <button id="btnVoltarInicioPerdeu" class="btn btn-primary">Voltar ao Início</button>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <footer class="mt-2 mb-3 ">

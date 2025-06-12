@@ -60,6 +60,10 @@ function inicializar() {
         carregarJogo();
     });
 
+    document.getElementById('btnVoltarInicio').addEventListener('click', function() {
+        window.location.href = '../pages/pag_acessar_estudante.html';
+    });
+
     // Configurar botão de borracha
     document.getElementById('btnBorracha').addEventListener('click', toggleBorracha);
 

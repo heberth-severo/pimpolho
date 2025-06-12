@@ -204,6 +204,20 @@ body {
     margin-bottom: 10px !important;
 }
 
+.botoes-modal {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.botoes-modal button {
+    min-width: 150px;
+}
+
+.botoes-modal .btn-primary {
+    background-color: #05ABC4;
+}
+
 @media (max-width: 575.98px) {
     .buttonsFooter .buttonSom button{
         height: 60px;

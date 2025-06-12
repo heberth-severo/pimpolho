@@ -145,21 +145,24 @@
                 </div>
 
                 <!-- Mensagem de vitória -->
-                <div id="mensagemVitoria" class="mensagem-vitoria" style="display: none;">
+                <div id="mensagemVitoria" class="mensagem-modal" style="display: none;">
                     <div class="mensagem-conteudo">
                         <h2>Parabéns!</h2>
                         <p>Você encontrou todas as diferenças!</p>
                         <p>Pontuação: <span id="pontuacaoFinal">0</span></p>
-                        <button id="btnJogarNovamente" class="btn btn-success">Jogar Novamente</button>
+                        <div class="botoes-modal">
+                            <button id="btnJogarNovamente" class="btn btn-success">Jogar Novamente</button>
+                            <button id="btnVoltarInicio" class="btn btn-primary">Voltar ao Início</button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Modal de confirmação para limpar o desenho -->
-                <div id="modalConfirmacaoLimpar" class="mensagem-vitoria" style="display: none;">
+                <div id="modalConfirmacaoLimpar" class="mensagem-modal" style="display: none;">
                     <div class="mensagem-conteudo">
                         <h2>Confirmação</h2>
                         <p>Tem certeza que deseja limpar o desenho?</p>
-                        <div class="botoes modal-botoes">
+                        <div class="botoes-modal">
                             <button id="btnCancelarLimpar" class="btn btn-danger">Não</button>
                             <button id="btnConfirmarLimpar" class="btn btn-success">Sim</button>
                         </div>

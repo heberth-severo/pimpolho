@@ -49,6 +49,16 @@ onload = () => {
         img.setAttribute('data-valor', i);
     });
     comercarJogo();
+
+    // Configurar eventos para os botões do modal
+    document.getElementById('btnJogarNovamente').addEventListener('click', function() {
+        document.getElementById('mensagemVitoria').style.display = 'none';
+        onload();
+    });
+
+    document.getElementById('btnVoltarInicio').addEventListener('click', function() {
+        window.location.href = '../pages/pag_acessar_estudante.html';
+    });
 }
 
 //Iniciar o jogo
@@ -189,6 +199,11 @@ function clicandoNaImagem(i) {
         localStorage.setItem('nome_jogo', JSON.stringify(jogos));
         console.log("Lista de jogos atualizada no localStorage:", jogos);
 
+        // Mostrar modal de vitória
+        document.getElementById('pontuacaoFinal').textContent = pontuacao;
+        document.getElementById('mensagemVitoria').style.display = 'flex';
+
+        // Configurar botão de reiniciar
         $('#btReinicio').on('click', function () {
             onload();
         });

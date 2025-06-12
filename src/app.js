@@ -39,21 +39,34 @@ app.use(express.static(staticPath))
 //     }
 // );
 
-// Configure database connection based on environment
-const client = new pg.Client(
-  process.env.NODE_ENV === 'production'
-    ? {
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-          rejectUnauthorized: false
-        }
+// Configure database connection options based on environment
+const getClientConfig = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return {
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
       }
-    : {
-        connectionString: process.env.DATABASE_URL
-      }
-);
+    };
+  } else if (process.env.NODE_ENV === 'development') {
+    return {
+      connectionString: process.env.DATABASE_URL
+    };
+  } else {
+    return {
+      user: 'postgres',
+      host: 'localhost',
+      database: 'pimpolho',
+      password: 'postgres',
+      port: 5432
+    };
+  }
+};
 
-//conectar ao bd com retry
+// Create a new client instance
+let client = new pg.Client(getClientConfig());
+
+//conectar ao bd with retry
 const connectWithRetry = () => {
   console.log('Attempting to connect to the database...');
   client.connect()
@@ -63,6 +76,10 @@ const connectWithRetry = () => {
     .catch(err => {
       console.error('Failed to connect to the database:', err);
       console.log('Retrying in 5 seconds...');
+
+      // Create a new client instance for the retry
+      client = new pg.Client(getClientConfig());
+
       setTimeout(connectWithRetry, 5000);
     });
 };
