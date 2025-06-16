@@ -96,9 +96,12 @@ body {
     background-color: #00d9ff;
 }
 .cardJogo:nth-child(3) .cardConteudo .cardConteudoJogo{
+    background-color: #9b59b6;
+}
+.cardJogo:nth-child(4) .cardConteudo .cardConteudoJogo{
     background-color: #ff0000;
 }
-.cardJogo:nth-child(2){
+.cardJogo:nth-child(2), .cardJogo:nth-child(4){
     position: relative;
     top: 8rem;
 }

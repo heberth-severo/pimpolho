@@ -57,6 +57,7 @@
                             <li>Ano/Turma: 3º Ano</li>
                             <li id="jogMemoria" class="mt-3"></li>
                             <li id="jogForca"></li>
+                            <li id="jogCompletePalavras"></li>
                             <li id="jog7Erros"></li>
                         </ul>
                     </div>
@@ -94,6 +95,20 @@
                 </div>
 
                 <div class="cardJogo">
+                    <a href="../jogocompletepalavras/jogo.html">
+                        <div class="cardConteudo">
+                            <div class="cardConteudoJogo">
+                                <img src="../assets/complete.png" alt="">
+                            </div>
+                        </div>
+                    </a>
+                    <div class="card-titulo">
+                        <p>Complete</p>
+                        <p>Palavras</p>
+                    </div>
+                </div>
+
+                <div class="cardJogo">
                     <a href="../jogodos7erros/jogo7erros.html">
                         <div class="cardConteudo">
                             <div class="cardConteudoJogo">
@@ -123,7 +138,8 @@
                             <div class="offcanvas-body ms-4 h6 ">
                                 - Para jogar o Jogo da Memória, clique no primeiro card.<br>
                                 - Para jogar o Jogo da Forca, clique no segundo card.<br>
-                                - Para jogar o Jogo dos 7 Erros, clique no terceiro card.
+                                - Para jogar o Complete Palavras, clique no terceiro card.<br>
+                                - Para jogar o Jogo dos 7 Erros, clique no quarto card.
                             </div>
                         </div>
                     </div>
@@ -156,6 +172,9 @@
             }
             if(jogo.nomejogo.includes('Forca') || jogo.nomejogo.includes('forca')){
                 $('#jogForca').text(jogo.nomejogo+ ' : ' + jogo.pontos)
+            }
+            if(jogo.nomejogo.includes('Complete Palavras')){
+                $('#jogCompletePalavras').text(jogo.nomejogo+ ' : ' + jogo.pontos)
             }
             if(jogo.nomejogo.toLowerCase().includes('7 erros')){
                 $('#jog7Erros').text(jogo.nomejogo+ ' : ' + jogo.pontos)
