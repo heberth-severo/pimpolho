@@ -18,12 +18,10 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 900px;
-    margin: 0 auto;
     width: 90%;
 }
 
@@ -32,12 +30,7 @@ body {
     font-family: 'Poppins', sans-serif;
     font-size: 2rem;
     font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.imgWord {
-    margin-bottom: 20px;
+    margin-bottom: 20px !important;
     text-align: center;
 }
 
@@ -49,7 +42,7 @@ body {
 }
 
 .conjuntoPalavra {
-    margin: 20px 0;
+    margin-bottom: 20px !important;
     font-family: 'Poppins', sans-serif;
     font-size: 2rem;
     text-align: center;
@@ -58,7 +51,7 @@ body {
 .conjuntoPalavra span {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 1px;
 }
 
 .letra-visivel, .letra-oculta {
@@ -116,14 +109,13 @@ body {
 }
 
 .btn-verificar {
-    margin-left: 15px;
-    padding: 10px 20px;
+    padding: 10px 13px !important;
     background-color: #008037;
     color: white;
     border: none;
     border-radius: 5px;
     font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     cursor: pointer;
 }
 
@@ -132,18 +124,18 @@ body {
 }
 
 .dica-container {
-    margin-top: 20px;
+    margin-top: 20px !important;
     text-align: center;
 }
 
 .btn-dica {
-    padding: 10px 20px;
+    padding: 10px 13px !important;
     background-color: #e0464c;
     color: white;
     border: none;
     border-radius: 5px;
     font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     cursor: pointer;
 }
 
@@ -185,6 +177,18 @@ body {
     font-size: 1.5em;
     margin: 30px 0 !important;
     font-family: 'Poppins';
+}
+
+.mensagem-conteudo button {
+    padding: 10px 13px !important;
+    margin-bottom: 10px !important;
+    background-color: #008037;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    cursor: pointer;
 }
 
 .botoes-modal {
