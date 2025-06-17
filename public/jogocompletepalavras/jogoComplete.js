@@ -43,10 +43,10 @@ let imagemAtual = "";
 let dicaAtual = "";
 let indiceAleatorio = 0;
 let letrasOcultas = [];
+let letrasAdivinhadas = []; // Posições das letras já adivinhadas
 let tentativas = 0;
 let pontos = 0;
 let jogoIniciado = false;
-let indiceLetraAtual = 0; // Índice da letra atual sendo adivinhada
 
 // Inicializa o jogo
 function iniciarJogo() {
@@ -77,8 +77,8 @@ function iniciarJogo() {
     // Limpa o campo de entrada
     document.querySelector(".letraAcertar span").innerHTML = "";
 
-    // Reinicia o índice da letra atual
-    indiceLetraAtual = 0;
+    // Reinicia as letras adivinhadas
+    letrasAdivinhadas = [];
 
     // Cria os campos de entrada para as letras faltantes
     criarCamposEntrada();
@@ -108,7 +108,7 @@ function criarCamposEntrada() {
     letraAcertar.innerHTML = "";
 
     // Se todas as letras já foram adivinhadas, não cria mais campos
-    if (indiceLetraAtual >= letrasOcultas.length) {
+    if (letrasAdivinhadas.length >= letrasOcultas.length) {
         // Todas as letras foram adivinhadas com sucesso
         mostrarMensagemVitoria(pontos);
         return;
@@ -119,12 +119,11 @@ function criarCamposEntrada() {
     form.id = "formLetras";
     form.onsubmit = function(e) { e.preventDefault(); verificarResposta(); };
 
-    // Adiciona apenas um campo de entrada para a letra atual
+    // Adiciona um campo de entrada para qualquer letra faltante
     const input = document.createElement("input");
     input.type = "text";
     input.maxLength = 1;
     input.className = "input-letra";
-    input.dataset.posicao = letrasOcultas[indiceLetraAtual];
     input.required = true;
 
     form.appendChild(input);
@@ -147,29 +146,32 @@ function verificarResposta() {
     if (!jogoIniciado) return;
 
     const input = document.querySelector(".input-letra");
-    const posicao = parseInt(input.dataset.posicao);
     const letraDigitada = input.value.toUpperCase();
-    const letraCorreta = palavraAtual[posicao];
 
-    if (letraDigitada !== letraCorreta) {
-        // Letra incorreta
+    // Encontra todas as posições onde esta letra aparece nas posições ocultas
+    const posicoesDisponiveis = letrasOcultas.filter(pos => 
+        palavraAtual[pos] === letraDigitada && !letrasAdivinhadas.includes(pos)
+    );
+
+    if (posicoesDisponiveis.length === 0) {
+        // Letra incorreta ou já foi adivinhada
         input.classList.add("incorreta");
         tentativas++;
 
-        if (tentativas >= 3) {
-            // Após 3 tentativas, mostra a resposta correta
+        if (tentativas >= 5) {
+            // Após 5 tentativas, mostra a resposta correta
             mostrarRespostaCorreta();
         }
     } else {
-        // Letra correta
+        // Letra correta - marca a primeira posição disponível como adivinhada
+        const posicao = posicoesDisponiveis[0];
+        letrasAdivinhadas.push(posicao);
+
         input.classList.remove("incorreta");
         input.classList.add("correta");
 
         // Atualiza a exibição da palavra
-        atualizarPalavraExibida(posicao, letraCorreta);
-
-        // Avança para a próxima letra
-        indiceLetraAtual++;
+        atualizarPalavraExibida(posicao, letraDigitada);
 
         // Pequeno atraso antes de mostrar o próximo campo
         setTimeout(() => {
@@ -178,7 +180,7 @@ function verificarResposta() {
         }, 500);
 
         // Se todas as letras foram adivinhadas
-        if (indiceLetraAtual >= letrasOcultas.length) {
+        if (letrasAdivinhadas.length >= letrasOcultas.length) {
             // Calcula pontuação (mais pontos para menos tentativas)
             pontos = Math.max(100 - (tentativas) * 10, 10);
 
