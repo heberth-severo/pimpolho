@@ -192,8 +192,7 @@ function criarCamposEntrada() {
 
         // Verifica se completou todas as 5 palavras
         if (palavrasAcertadas >= TOTAL_PALAVRAS_OBJETIVO) {
-            // Salva a pontuação final
-            salvarPontuacao(pontos);
+            // Mostra o resultado final (que já salva a pontuação)
             mostrarResultadoFinal();
         } else {
             // Mostra modal de palavra acertada e vai para próxima
@@ -397,6 +396,9 @@ function mostrarPalavraAcertada(pontosRodada) {
 
 // Mostra o resultado final após completar todas as 5 palavras
 function mostrarResultadoFinal() {
+    // Salvar a pontuação final
+    salvarPontuacao(pontos);
+
     // Cria o modal de resultado final se não existir
     let modal = document.getElementById("mensagemResultadoFinal");
     if (!modal) {
@@ -445,6 +447,11 @@ function mostrarResultadoFinal() {
 
 // Salva a pontuação no localStorage
 function salvarPontuacao(pontos) {
+    // Registrar pontuação no banco de dados (ID 4 = Jogo Complete Palavras)
+    if (typeof registrarPontuacao === 'function') {
+        registrarPontuacao(4, pontos);
+    }
+
     let jogos = JSON.parse(localStorage.getItem('nome_jogo')) || [];
 
     // Verificar se o jogo já existe na lista
@@ -540,6 +547,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (jogo.nomejogo.includes('Forca') || jogo.nomejogo.includes('forca')) {
             document.getElementById('jogForca').textContent = jogo.nomejogo + ' : ' + jogo.pontos;
+        }
+        if (jogo.nomejogo.includes('Complete Palavras')) {
+            document.getElementById('jogCompletePalavras').textContent = jogo.nomejogo + ' : ' + jogo.pontos;
         }
         if (jogo.nomejogo.toLowerCase().includes('7 erros')) {
             document.getElementById('jog7Erros').textContent = jogo.nomejogo + ' : ' + jogo.pontos;

@@ -379,6 +379,7 @@ function atualizarExibicaoPontuacao() {
     $('#jogMemoria').text('');
     $('#jogForca').text('');
     $('#jog7Erros').text('');
+    $('#jogCompletePalavras').text('');
 
     for(let jogo of jogos){
         // Somar pontos ao total
@@ -392,6 +393,9 @@ function atualizarExibicaoPontuacao() {
         }
         if(jogo.nomejogo.toLowerCase().includes('7 erros')){
             $('#jog7Erros').text(jogo.nomejogo+ ' : ' + jogo.pontos);
+        }
+        if(jogo.nomejogo.includes('Complete Palavras')){
+            $('#jogCompletePalavras').text(jogo.nomejogo+ ' : ' + jogo.pontos);
         }
     }
 

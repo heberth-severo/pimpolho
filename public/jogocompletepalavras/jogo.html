@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="style.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/funcionalidades.js"></script>
     <script src="jogoComplete.js" defer></script>
 
 </head>
@@ -50,6 +51,7 @@
                             <li>Ano/Turma: 3º Ano</li>
                             <li id="jogMemoria" class="mt-3"></li>
                             <li id="jogForca"></li>
+                            <li id="jogCompletePalavras"></li>
                             <li id="jog7Erros"></li>
                         </ul>
                     </div>
@@ -131,13 +133,16 @@
            if(jogo.nomejogo.includes('Forca') || jogo.nomejogo.includes('forca')){
                $('#jogForca').text(jogo.nomejogo+ ' : ' + jogo.pontos)
            }
+           if(jogo.nomejogo.includes('Complete Palavras')){
+               $('#jogCompletePalavras').text(jogo.nomejogo+ ' : ' + jogo.pontos)
+           }
            if(jogo.nomejogo.toLowerCase().includes('7 erros')){
                $('#jog7Erros').text(jogo.nomejogo+ ' : ' + jogo.pontos)
            }
         }
 
         // Adicionar o total de pontos
-        $('.offcanvas-body ul').append('<li class="mt-3 fw-bold">Total de Pontos: ' + totalPontos + '</li>');
+        // $('.offcanvas-body ul').append('<li class="mt-3 fw-bold">Total de Pontos: ' + totalPontos + '</li>');
 
         function toggleAudio() {
             const audio = document.getElementById('gameAudio');
