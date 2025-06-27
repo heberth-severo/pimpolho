@@ -95,7 +95,21 @@
             <div class="footerPaginaAcessar">
                 <div class="buttonsFooter ">
                     <div class="buttonDica ms-2">
-                        <a href=""><img src="../assets/iconeLamp.svg" alt="icone de uma lampada"></a>
+                        <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
+                            <img src="../assets/iconeLamp.svg" alt="icone de uma lampada">
+                        </button>
+                        <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+                            <div class="offcanvas-header">
+                              <h3 id="offcanvasTopLabel" class="m-3 h2">Como utilizar o filtro de busca:</h3>
+                              <button class="btn-close text-reset h2" data-bs-dismiss="offcanvas" aria-label="Close">X</button>
+                            </div>
+                            <div class="offcanvas-body ms-4 h6 ">
+                                - Selecione um jogo no menu suspenso para filtrar os resultados por jogo específico.<br>
+                                - Clique no botão "Filtrar" para aplicar o filtro selecionado.<br>
+                                - Use o botão de atualizar para limpar o filtro e mostrar todos os resultados novamente.<br>
+                                - A tabela mostrará o nome do aluno, o jogo jogado e a pontuação obtida.
+                            </div>
+                        </div>
                     </div>
                     <div class="buttonSom ms-2">
                         <audio id="gameAudio" src="../assets/morning-funny-beat.mp3" loop></audio>
