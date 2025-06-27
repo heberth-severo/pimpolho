@@ -193,6 +193,15 @@ function acessarProfessor() {
                 type: 'GET',
                 url: `${window.location.origin}/professor/${email}/${senha}`,
                 success: function (resposta) {
+                    localStorage.removeItem('nome_professor');
+                    localStorage.setItem('nome_professor', resposta.nomeprof);
+                    localStorage.setItem('id_professor', resposta.idProfessor);
+                    localStorage.setItem('id_turma_professor', resposta.idTurma);
+
+                    // Armazenar email e senha para atualizações futuras
+                    localStorage.setItem('email_professor', email);
+                    localStorage.setItem('senha_professor', senha);
+
                     window.location.href = "pag_acessar_professor.html";
                 },
                 error: function (resposta) {
@@ -275,26 +284,140 @@ function atualizar_senha_professor() {
 /*------------------------------------------------------------------------------------------------------- */
 //Função selecionar jogo
 function consultarJogo() {
-    let jogo = $('#nomeJogo').val();
+    let idJogo = $('#nomeJogo').val();
+    console.log('ID do jogo selecionado:', idJogo);
 
-    $.ajax(
-        {
-            type: 'GET',
-            url: `${window.location.origin}/aluno/${jogo}`,
-            success: function (resposta) {
+    // Limpar dados anteriores da tabela
+    $('table.tableRelatorio tbody').empty();
 
-                for (let i = 0; i < resposta.resultados.length; i++) {
-                    $('#tbnome').append(`${resposta.resultados[i].nomealuno}<br>`);
-                    $('#tbid').append(`${resposta.resultados[i].idaluno}<br>`);
-                    $('#tbnomejogo').append(` ${resposta.resultados[i].nomejogo}<br>`);
-                    $('#tbpontos').append(` ${resposta.resultados[i].pontos}<br>`);
+    // Se nenhum jogo for selecionado, mostrar mensagem
+    if (!idJogo) {
+        $('table.tableRelatorio tbody').append('<tr><td colspan="3">Por favor, selecione um jogo</td></tr>');
+        return;
+    }
+
+    // Verificar se é um professor logado e tem uma turma associada
+    const idTurmaProfessor = localStorage.getItem('id_turma_professor');
+    console.log('ID da turma do professor:', idTurmaProfessor);
+
+    // Se for professor com turma, usar o endpoint que filtra por turma e ID do jogo
+    if (idTurmaProfessor) {
+        const url = `${window.location.origin}/aluno/jogo/${idJogo}/turma/${idTurmaProfessor}`;
+        console.log('URL da requisição:', url);
+
+        $.ajax(
+            {
+                type: 'GET',
+                url: url,
+                success: function (resposta) {
+                    console.log('Resposta da requisição:', resposta);
+
+                    if (resposta.resultados.length === 0) {
+                        $('table.tableRelatorio tbody').append('<tr><td colspan="3">Nenhum aluno encontrado para esta turma e jogo</td></tr>');
+                    } else {
+                        for (let i = 0; i < resposta.resultados.length; i++) {
+                            console.log('Dados do aluno:', resposta.resultados[i]);
+                            const row = `<tr>
+                                <td>${resposta.resultados[i].nomealuno}</td>
+                                <td class="me-2">${resposta.resultados[i].nomejogo}</td>
+                                <td class="text-center">${resposta.resultados[i].pontos}</td>
+                            </tr>`;
+                            $('table.tableRelatorio tbody').append(row);
+                        }
+                    }
+                },
+                error: function (resposta) {
+                    console.error('Erro na requisição:', resposta);
+                    $('table.tableRelatorio tbody').append('<tr><td colspan="3">Erro ao buscar dados do jogo para esta turma!</td></tr>');
+                    alert(`Erro ao buscar dados do jogo para esta turma!`);
                 }
-            },
-            error: function (resposta) {
-                alert(`Não tem esse jogo!`);
             }
+        );
+    } else {
+        // Se não for professor ou não tiver turma, usar o endpoint que filtra apenas por ID do jogo
+        const url = `${window.location.origin}/aluno/jogo/${idJogo}`;
+        console.log('URL da requisição:', url);
+
+        $.ajax(
+            {
+                type: 'GET',
+                url: url,
+                success: function (resposta) {
+                    console.log('Resposta da requisição:', resposta);
+
+                    if (resposta.resultados.length === 0) {
+                        $('table.tableRelatorio tbody').append('<tr><td colspan="3">Nenhum aluno encontrado para este jogo</td></tr>');
+                    } else {
+                        for (let i = 0; i < resposta.resultados.length; i++) {
+                            console.log('Dados do aluno:', resposta.resultados[i]);
+                            const row = `<tr>
+                                <td>${resposta.resultados[i].nomealuno}</td>
+                                <td class="me-2">${resposta.resultados[i].nomejogo}</td>
+                                <td class="text-center">${resposta.resultados[i].pontos}</td>
+                            </tr>`;
+                            $('table.tableRelatorio tbody').append(row);
+                        }
+                    }
+                },
+                error: function (resposta) {
+                    console.error('Erro na requisição:', resposta);
+                    $('table.tableRelatorio tbody').append('<tr><td colspan="3">Não tem esse jogo!</td></tr>');
+                    alert(`Não tem esse jogo!`);
+                }
+            }
+        );
+    }
+}
+
+// Função para carregar todos os alunos da turma do professor
+function carregarAlunosDaTurma() {
+    // Verificar se é um professor logado e tem uma turma associada
+    const idTurmaProfessor = localStorage.getItem('id_turma_professor');
+    console.log('ID da turma do professor:', idTurmaProfessor);
+
+    if (!idTurmaProfessor) {
+        $('table.tableRelatorio tbody').empty();
+        $('table.tableRelatorio tbody').append('<tr><td colspan="3">Você não está associado a nenhuma turma</td></tr>');
+        return;
+    }
+
+    // Limpar dados anteriores da tabela
+    $('table.tableRelatorio tbody').empty();
+
+    // Usar o primeiro jogo da lista (Jogo da Memória - ID 2) para carregar os alunos inicialmente
+    const idJogoInicial = "2"; // ID do Jogo da Memória
+    console.log('ID do jogo inicial:', idJogoInicial);
+
+    const url = `${window.location.origin}/aluno/jogo/${idJogoInicial}/turma/${idTurmaProfessor}`;
+    console.log('URL da requisição:', url);
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (resposta) {
+            console.log('Resposta da requisição:', resposta);
+
+            if (resposta.resultados.length === 0) {
+                $('table.tableRelatorio tbody').append('<tr><td colspan="3">Nenhum aluno encontrado para esta turma</td></tr>');
+            } else {
+                for (let i = 0; i < resposta.resultados.length; i++) {
+                    console.log('Dados do aluno:', resposta.resultados[i]);
+                    const row = `<tr>
+                        <td>${resposta.resultados[i].nomealuno}</td>
+                        <td class="me-2">${resposta.resultados[i].nomejogo}</td>
+                        <td class="text-center">${resposta.resultados[i].pontos}</td>
+                    </tr>`;
+                    $('table.tableRelatorio tbody').append(row);
+                }
+                // Selecionar o jogo no dropdown
+                $('#nomeJogo').val(idJogoInicial);
+            }
+        },
+        error: function (resposta) {
+            console.error('Erro na requisição:', resposta);
+            $('table.tableRelatorio tbody').append('<tr><td colspan="3">Erro ao carregar alunos da turma</td></tr>');
         }
-    );
+    });
 }
 
 /*------------------------------------------------------------------------------------------------------- */

@@ -19,7 +19,7 @@
 /* css do main de acesso */
 
 .mainAcesso{
-   
+
     justify-content:center;
     margin-top: 8rem!important;
 }
@@ -71,11 +71,11 @@ h3, p{
 .formAcesso{
     justify-content: center;
     display: block;
-    
+
 }
 .form{
     text-align: center;
-    
+
 }
 .form-group{
     text-align: center;
@@ -119,7 +119,7 @@ h3, p{
     text-align: center;
     padding: 0!important;
   }
-  
+
   .modal:before {
     content: '';
     display: inline-block;
@@ -127,7 +127,7 @@ h3, p{
     vertical-align: middle;
     margin-right: -4px;
   }
-  
+
   .modal-dialog {
     display: inline-block;
     text-align: left;
@@ -145,13 +145,12 @@ h3, p{
 
 /*################################## Página Acesso Professor ###################################### */
 .containerListaAlunos{
-    margin: 2rem !important;
+    margin: 1rem !important;
     height: 480px!important;
-    display: inline-flexbox;
     flex-wrap: wrap;
     justify-content: center;
     flex-direction: column;
-   
+
 
 }
 .tableRelatorio{
@@ -162,17 +161,25 @@ h3, p{
 }
 
 #relatorio h3{
+    font-size: 2.5rem;
+}
+
+#relatorio label{
+    font-size: 1.7rem;
+}
+
+.containerListaAlunos table thead th{
     font-size: 1.3rem;
 }
 
-#relatorio input{
+#relatorio select{
 padding: .4rem!important ;
-margin-top: 0.6rem;
 width: 300px;
 border-radius: 7px;
 border: 2px solid #05ABC4;
 outline: 0;
 align-items: center;
+display: inline-block;
 }
 
 #relatorio button{
@@ -182,6 +189,7 @@ align-items: center;
     color: #ffff;
     width: 80px;
     padding: .4rem!important ;
+    display: inline-block;
 }
 
 /* Logout */
@@ -196,8 +204,8 @@ align-items: center;
 /* 
 #buttonProf{
     margin-top: 28px;
-    
-  
+
+
 } */
 
 
@@ -206,13 +214,13 @@ align-items: center;
 
 html::-webkit-scrollbar{
     width: .5rem;
-  
+
   }
-  
+
   html::-webkit-scrollbar-track{
     background-color: #ffffff;
   }
-  
+
   html::-webkit-scrollbar-thumb{
     background-color: #013563;
     border-radius: 5rem;

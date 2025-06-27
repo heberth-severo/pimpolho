@@ -195,7 +195,7 @@ app.get(
     function (req, res) {
         client.query(
             {
-                text: ' SELECT email,senha, nomeprof FROM tbProfessor WHERE email= $1 and senha= $2',
+                text: ' SELECT email,senha, nomeprof, idTurma, idProfessor FROM tbProfessor WHERE email= $1 and senha= $2',
                 values: [req.params.email, req.params.senha]
             }
 
@@ -207,7 +207,9 @@ app.get(
                         status: 'OK',
                         email: tbAluno.email,
                         senha: tbAluno.senha,
-                        nomeprof: tbAluno.nomeprof
+                        nomeprof: tbAluno.nomeprof,
+                        idTurma: tbAluno.idturma,
+                        idProfessor: tbAluno.idprofessor
                     }
                 );
             }
@@ -277,17 +279,15 @@ app.post('/professor/atualizar', function (req, res) {
 });
 
 
-//Consultando por jogo
+//Consultando por jogo (pelo nome - deprecated)
 app.get(
     '/aluno/:jogo',
     function (req, res) {
         client.query(
             {
-
-                text: 'select * from tbAluno al inner join tbAlunoJogo aj on al.idAluno = aj.idAluno inner join tbJogo jo on aj.idJogo = jo.idJogo where jo.nomeJogo = $1',
-                values: [req.params.jogo]
+                text: 'select * from tbAluno al inner join tbAlunoJogo aj on al.idAluno = aj.idAluno inner join tbJogo jo on aj.idJogo = jo.idJogo where jo.nomeJogo ILIKE $1',
+                values: [`%${req.params.jogo}%`]
             }
-
         ).then(
             function (ret) {
                 let dado = []
@@ -313,7 +313,117 @@ app.get(
                 message: 'Failed to retrieve game data'
             });
         });
+    }
+);
 
+//Consultando por jogo (pelo ID)
+app.get(
+    '/aluno/jogo/:idJogo',
+    function (req, res) {
+        client.query(
+            {
+                text: 'select * from tbAluno al inner join tbAlunoJogo aj on al.idAluno = aj.idAluno inner join tbJogo jo on aj.idJogo = jo.idJogo where jo.idJogo = $1',
+                values: [req.params.idJogo]
+            }
+        ).then(
+            function (ret) {
+                let dado = []
+                for (dados of ret.rows) {
+                    dado.push({
+                        nomealuno: dados.nome,
+                        idaluno: dados.idaluno,
+                        nomejogo: dados.nomejogo,
+                        pontos: dados.pontos
+                    })
+                }
+                res.json(
+                    {
+                        status: 'OK',
+                        resultados: dado
+                    }
+                );
+            }
+        ).catch(error => {
+            console.error('Error querying game data by ID:', error);
+            res.status(500).json({
+                status: 'Error',
+                message: 'Failed to retrieve game data by ID'
+            });
+        });
+    }
+);
+
+//Consultando por jogo e turma (para professores - pelo nome - deprecated)
+app.get(
+    '/aluno/:jogo/:idTurma',
+    function (req, res) {
+        client.query(
+            {
+                text: 'select * from tbAluno al inner join tbAlunoJogo aj on al.idAluno = aj.idAluno inner join tbJogo jo on aj.idJogo = jo.idJogo where jo.nomeJogo ILIKE $1 and al.idTurma = $2',
+                values: [`%${req.params.jogo}%`, req.params.idTurma]
+            }
+        ).then(
+            function (ret) {
+                let dado = []
+                for (dados of ret.rows) {
+                    dado.push({
+                        nomealuno: dados.nome,
+                        idaluno: dados.idaluno,
+                        nomejogo: dados.nomejogo,
+                        pontos: dados.pontos
+                    })
+                }
+                res.json(
+                    {
+                        status: 'OK',
+                        resultados: dado
+                    }
+                );
+            }
+        ).catch(error => {
+            console.error('Error querying game data by class:', error);
+            res.status(500).json({
+                status: 'Error',
+                message: 'Failed to retrieve game data by class'
+            });
+        });
+    }
+);
+
+//Consultando por jogo e turma (para professores - pelo ID)
+app.get(
+    '/aluno/jogo/:idJogo/turma/:idTurma',
+    function (req, res) {
+        client.query(
+            {
+                text: 'select * from tbAluno al left join tbAlunoJogo aj on al.idAluno = aj.idAluno left join tbJogo jo on aj.idJogo = jo.idJogo where (jo.idJogo = $1 or aj.idJogo is null) and al.idTurma = $2',
+                values: [req.params.idJogo, req.params.idTurma]
+            }
+        ).then(
+            function (ret) {
+                let dado = []
+                for (dados of ret.rows) {
+                    dado.push({
+                        nomealuno: dados.nome,
+                        idaluno: dados.idaluno,
+                        nomejogo: dados.nomejogo || 'Não jogou ainda',
+                        pontos: dados.pontos || 0
+                    })
+                }
+                res.json(
+                    {
+                        status: 'OK',
+                        resultados: dado
+                    }
+                );
+            }
+        ).catch(error => {
+            console.error('Error querying game data by ID and class:', error);
+            res.status(500).json({
+                status: 'Error',
+                message: 'Failed to retrieve game data by ID and class'
+            });
+        });
     }
 );
 

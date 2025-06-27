@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Acessar Professor</title>
-    <link rel="icon" href="src/assets/logoMini.svg" type="image/x-icon">
+    <link rel="icon" href="../assets/favicon.svg" type="image/x-icon" >
     <!-- Style -->
     <link rel="stylesheet" href="../style/reset.css">
     <link rel="stylesheet" href="../style/estilo.css">
@@ -45,7 +45,7 @@
                 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="nameAluno">
                     <div class="offcanvas-header">
                         <div class="tituloSidebar ms-5">
-                            <h5 id="nameAluno">Nome</h5>
+                            <h5 id="nameProfessor">Nome</h5>
                         </div>
                         <button type="button" class=" text-reset m-3" data-bs-dismiss="offcanvas" aria-label="Close">
                             <img src="../assets/fechar.svg" alt="fechar">
@@ -53,7 +53,7 @@
                     </div>
                     <div class="offcanvas-body">
                         <ul class="text-center">
-                            <li>Ano/Turma: 3º Ano</li>
+                            <li id="turmaProfessor">Ano/Turma: </li>
                             <hr width="90%">
                         </ul>
                     </div>
@@ -64,10 +64,18 @@
         <main class="containerListaAlunos ">
             <div id="relatorio">
                 <h3 class="">Relatório de pontos por jogo</h3>
-                <label for="nomeJogo">Nome do jogo:*</label><br>
-                <input type="text" name="text" id="nomeJogo">
-                <button onclick="consultarJogo()" class="m-2">Filtrar</button>
-                <a href="" onclick="atualizar()"><img src="../assets/atualizar.svg" alt="recarregar"></a>
+                <label for="nomeJogo">Nome do jogo:</label>
+                <div style="display: flex; align-items: center;">
+                    <select id="nomeJogo" class="form-select">
+                        <option value="">Selecione um jogo</option>
+                        <option value="2">Jogo da Memória</option>
+                        <option value="1">Jogo da Forca</option>
+                        <option value="3">Jogo dos 7 Erros</option>
+                        <option value="4">Jogo Complete Palavras</option>
+                    </select>
+                    <button onclick="consultarJogo()" class="m-2">Filtrar</button>
+                    <a href="javascript:void(0);" onclick="atualizar()" class="m-2"><img src="../assets/atualizar.svg" alt="recarregar"></a>
+                </div>
             </div>
             <table class="table tableRelatorio">
                 <thead>
@@ -78,11 +86,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td id="tbnome"></td>
-                        <td id="tbnomejogo" class="me-2"></td>
-                        <td id="tbpontos" class="text-center"></td>
-                    </tr>
+                    <!-- Dados dos alunos serão inseridos aqui dinamicamente -->
                 </tbody>
             </table>
         </main>
@@ -106,6 +110,32 @@
     </div>
 
     <script>
+        // Carregar informações do professor quando a página carrega
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obter informações do professor do localStorage
+            const nomeProfessor = localStorage.getItem('nome_professor');
+            const idTurmaProfessor = localStorage.getItem('id_turma_professor');
+
+            // Exibir o nome do professor
+            if (nomeProfessor) {
+                document.getElementById('nameProfessor').textContent = nomeProfessor;
+            }
+
+            // Exibir a turma do professor
+            if (idTurmaProfessor) {
+                document.getElementById('turmaProfessor').textContent = 'Ano/Turma: ' + idTurmaProfessor;
+            }
+
+            // Se não houver informações do professor, redirecionar para a página de login
+            if (!nomeProfessor || !idTurmaProfessor) {
+                alert('Sessão expirada ou inválida. Por favor, faça login novamente.');
+                window.location.href = '../index.html';
+            } else {
+                // Carregar alunos da turma do professor
+                carregarAlunosDaTurma();
+            }
+        });
+
         function toggleAudio() {
             const audio = document.getElementById('gameAudio');
             if (audio.paused) {
@@ -115,6 +145,17 @@
                 audio.pause();
                 document.getElementById('btnSom').classList.remove('playing');
             }
+        }
+
+        // Função para atualizar a página
+        function atualizar() {
+            // Limpar a tabela
+            $('table.tableRelatorio tbody').empty();
+
+            // Limpar o campo de filtro
+            $('#nomeJogo').val('');
+
+            return false; // Prevenir comportamento padrão do link
         }
     </script>
 </body>
