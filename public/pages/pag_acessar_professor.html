@@ -89,6 +89,34 @@
                     <!-- Dados dos alunos serão inseridos aqui dinamicamente -->
                 </tbody>
             </table>
+
+            <!-- Controles de paginação -->
+            <div class="mt-5 d-flex justify-content-between align-items-center">
+                <div class="items-per-page d-flex align-items-center">
+                    <label for="itemsPerPage" class="me-2">Itens por página:</label>
+                    <select id="itemsPerPage" class="form-select form-select-sm" style="width: auto;">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                    <span id="currentPage" class="ms-3">Página 1</span>
+                </div>
+                <nav aria-label="Navegação de páginas">
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item" id="prevPageItem">
+                            <a class="page-link" href="#" id="prevPage" aria-label="Anterior">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <!-- Os números das páginas serão inseridos aqui dinamicamente -->
+                        <li class="page-item" id="nextPageItem">
+                            <a class="page-link" href="#" id="nextPage" aria-label="Próximo">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </main>
 
         <footer class="mt-5 mb-3 " id="buttonProf">
@@ -106,8 +134,8 @@
                             <div class="offcanvas-body ms-4 h6 ">
                                 - Selecione um jogo no menu suspenso para filtrar os resultados por jogo específico.<br>
                                 - Clique no botão "Filtrar" para aplicar o filtro selecionado.<br>
-                                - Use o botão de atualizar para limpar o filtro e mostrar todos os resultados novamente.<br>
-                                - A tabela mostrará o nome do aluno, o jogo jogado e a pontuação obtida.
+                                - A tabela mostrará o nome do aluno, o jogo jogado e a pontuação obtida.<br>
+                                - Use o botão de Atualizar para limpar o filtro e mostrar todos os resultados novamente.
                             </div>
                         </div>
                     </div>
@@ -137,7 +165,7 @@
 
             // Exibir a turma do professor
             if (idTurmaProfessor) {
-                document.getElementById('turmaProfessor').textContent = 'Ano/Turma: ' + idTurmaProfessor;
+                document.getElementById('turmaProfessor').textContent = 'Ano/Turma: ' + idTurmaProfessor + 'º Ano';
             }
 
             // Se não houver informações do professor, redirecionar para a página de login
@@ -147,8 +175,38 @@
             } else {
                 // Carregar alunos da turma do professor
                 carregarAlunosDaTurma();
+
+                // Configurar eventos de paginação
+                configurarEventosPaginacao();
             }
         });
+
+        // Configurar eventos para os controles de paginação
+        function configurarEventosPaginacao() {
+            // Evento para o botão "Anterior"
+            $('#prevPage').on('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    atualizarExibicaoComPaginacao();
+                }
+            });
+
+            // Evento para o botão "Próximo"
+            $('#nextPage').on('click', function() {
+                const totalPages = Math.ceil(allGameData.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    atualizarExibicaoComPaginacao();
+                }
+            });
+
+            // Evento para o dropdown de itens por página
+            $('#itemsPerPage').on('change', function() {
+                itemsPerPage = parseInt($(this).val());
+                currentPage = 1; // Voltar para a primeira página
+                atualizarExibicaoComPaginacao();
+            });
+        }
 
         function toggleAudio() {
             const audio = document.getElementById('gameAudio');
@@ -168,6 +226,9 @@
 
             // Limpar o campo de filtro
             $('#nomeJogo').val('');
+
+            // Carregar todos os jogos
+            carregarTodosJogos();
 
             return false; // Prevenir comportamento padrão do link
         }

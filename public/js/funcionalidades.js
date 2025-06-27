@@ -282,6 +282,11 @@ function atualizar_senha_professor() {
 
 
 /*------------------------------------------------------------------------------------------------------- */
+// Variáveis globais para paginação
+let allGameData = [];
+let currentPage = 1;
+let itemsPerPage = 10;
+
 //Função selecionar jogo
 function consultarJogo() {
     let idJogo = $('#nomeJogo').val();
@@ -290,15 +295,15 @@ function consultarJogo() {
     // Limpar dados anteriores da tabela
     $('table.tableRelatorio tbody').empty();
 
-    // Se nenhum jogo for selecionado, mostrar mensagem
-    if (!idJogo) {
-        $('table.tableRelatorio tbody').append('<tr><td colspan="3">Por favor, selecione um jogo</td></tr>');
-        return;
-    }
-
     // Verificar se é um professor logado e tem uma turma associada
     const idTurmaProfessor = localStorage.getItem('id_turma_professor');
     console.log('ID da turma do professor:', idTurmaProfessor);
+
+    // Se nenhum jogo for selecionado, carregar todos os jogos
+    if (!idJogo) {
+        carregarTodosJogos();
+        return;
+    }
 
     // Se for professor com turma, usar o endpoint que filtra por turma e ID do jogo
     if (idTurmaProfessor) {
@@ -315,15 +320,12 @@ function consultarJogo() {
                     if (resposta.resultados.length === 0) {
                         $('table.tableRelatorio tbody').append('<tr><td colspan="3">Nenhum aluno encontrado para esta turma e jogo</td></tr>');
                     } else {
-                        for (let i = 0; i < resposta.resultados.length; i++) {
-                            console.log('Dados do aluno:', resposta.resultados[i]);
-                            const row = `<tr>
-                                <td>${resposta.resultados[i].nomealuno}</td>
-                                <td class="me-2">${resposta.resultados[i].nomejogo}</td>
-                                <td class="text-center">${resposta.resultados[i].pontos}</td>
-                            </tr>`;
-                            $('table.tableRelatorio tbody').append(row);
-                        }
+                        // Armazenar os dados para paginação
+                        allGameData = resposta.resultados;
+                        // Resetar para a primeira página
+                        currentPage = 1;
+                        // Atualizar a exibição com paginação
+                        atualizarExibicaoComPaginacao();
                     }
                 },
                 error: function (resposta) {
@@ -348,15 +350,12 @@ function consultarJogo() {
                     if (resposta.resultados.length === 0) {
                         $('table.tableRelatorio tbody').append('<tr><td colspan="3">Nenhum aluno encontrado para este jogo</td></tr>');
                     } else {
-                        for (let i = 0; i < resposta.resultados.length; i++) {
-                            console.log('Dados do aluno:', resposta.resultados[i]);
-                            const row = `<tr>
-                                <td>${resposta.resultados[i].nomealuno}</td>
-                                <td class="me-2">${resposta.resultados[i].nomejogo}</td>
-                                <td class="text-center">${resposta.resultados[i].pontos}</td>
-                            </tr>`;
-                            $('table.tableRelatorio tbody').append(row);
-                        }
+                        // Armazenar os dados para paginação
+                        allGameData = resposta.resultados;
+                        // Resetar para a primeira página
+                        currentPage = 1;
+                        // Atualizar a exibição com paginação
+                        atualizarExibicaoComPaginacao();
                     }
                 },
                 error: function (resposta) {
@@ -367,6 +366,188 @@ function consultarJogo() {
             }
         );
     }
+}
+
+// Função para carregar todos os jogos
+function carregarTodosJogos() {
+    const idTurmaProfessor = localStorage.getItem('id_turma_professor');
+
+    if (!idTurmaProfessor) {
+        $('table.tableRelatorio tbody').append('<tr><td colspan="3">Você não está associado a nenhuma turma</td></tr>');
+        return;
+    }
+
+    // IDs dos jogos disponíveis
+    const jogosIDs = ["1", "2", "3", "4"]; // 1: Forca, 2: Memória, 3: 7 Erros, 4: Complete Palavras
+    let resultadosCombinados = [];
+    let jogosCarregados = 0;
+
+    // Limpar a tabela
+    $('table.tableRelatorio tbody').empty();
+
+    // Mostrar mensagem de carregamento
+    $('table.tableRelatorio tbody').append('<tr><td colspan="3">Carregando todos os jogos...</td></tr>');
+
+    // Fazer requisições para cada jogo
+    jogosIDs.forEach(idJogo => {
+        const url = `${window.location.origin}/aluno/jogo/${idJogo}/turma/${idTurmaProfessor}`;
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function(resposta) {
+                if (resposta.resultados && resposta.resultados.length > 0) {
+                    // Adicionar resultados ao array combinado
+                    resultadosCombinados = resultadosCombinados.concat(resposta.resultados);
+                }
+
+                jogosCarregados++;
+
+                // Quando todos os jogos forem carregados
+                if (jogosCarregados === jogosIDs.length) {
+                    // Limpar mensagem de carregamento
+                    $('table.tableRelatorio tbody').empty();
+
+                    if (resultadosCombinados.length === 0) {
+                        $('table.tableRelatorio tbody').append('<tr><td colspan="3">Nenhum resultado encontrado para esta turma</td></tr>');
+                    } else {
+                        // Armazenar os dados para paginação
+                        allGameData = resultadosCombinados;
+                        // Resetar para a primeira página
+                        currentPage = 1;
+                        // Atualizar a exibição com paginação
+                        atualizarExibicaoComPaginacao();
+                    }
+                }
+            },
+            error: function(erro) {
+                console.error(`Erro ao carregar jogo ${idJogo}:`, erro);
+
+                jogosCarregados++;
+
+                // Mesmo com erro, verificar se todos os jogos foram processados
+                if (jogosCarregados === jogosIDs.length) {
+                    // Limpar mensagem de carregamento
+                    $('table.tableRelatorio tbody').empty();
+
+                    if (resultadosCombinados.length === 0) {
+                        $('table.tableRelatorio tbody').append('<tr><td colspan="3">Nenhum resultado encontrado para esta turma</td></tr>');
+                    } else {
+                        // Armazenar os dados para paginação
+                        allGameData = resultadosCombinados;
+                        // Resetar para a primeira página
+                        currentPage = 1;
+                        // Atualizar a exibição com paginação
+                        atualizarExibicaoComPaginacao();
+                    }
+                }
+            }
+        });
+    });
+}
+
+// Função para atualizar a exibição com paginação
+function atualizarExibicaoComPaginacao() {
+    // Limpar a tabela
+    $('table.tableRelatorio tbody').empty();
+
+    // Calcular índices para a página atual
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, allGameData.length);
+    const totalPages = Math.ceil(allGameData.length / itemsPerPage);
+
+    // Se não houver dados
+    if (allGameData.length === 0) {
+        $('table.tableRelatorio tbody').append('<tr><td colspan="3">Nenhum resultado encontrado</td></tr>');
+        return;
+    }
+
+    // Adicionar linhas para a página atual
+    for (let i = startIndex; i < endIndex; i++) {
+        const row = `<tr>
+            <td>${allGameData[i].nomealuno}</td>
+            <td class="me-2">${allGameData[i].nomejogo}</td>
+            <td class="text-center">${allGameData[i].pontos}</td>
+        </tr>`;
+        $('table.tableRelatorio tbody').append(row);
+    }
+
+    // Atualizar informação da página atual
+    $('#currentPage').text(`Página ${currentPage} de ${totalPages}`);
+
+    // Habilitar/desabilitar botões de navegação
+    if (currentPage === 1) {
+        $('#prevPageItem').addClass('disabled');
+    } else {
+        $('#prevPageItem').removeClass('disabled');
+    }
+
+    if (currentPage === totalPages) {
+        $('#nextPageItem').addClass('disabled');
+    } else {
+        $('#nextPageItem').removeClass('disabled');
+    }
+
+    // Gerar os números das páginas
+    atualizarNumerosPaginas(totalPages);
+}
+
+// Função para atualizar os números das páginas na paginação
+function atualizarNumerosPaginas(totalPages) {
+    // Remover os números de página existentes
+    $('.pagination .page-number').remove();
+
+    // Determinar quais páginas mostrar
+    let pagesToShow = [];
+
+    if (totalPages <= 5) {
+        // Se houver 5 ou menos páginas, mostrar todas
+        for (let i = 1; i <= totalPages; i++) {
+            pagesToShow.push(i);
+        }
+    } else {
+        // Sempre mostrar a primeira página
+        pagesToShow.push(1);
+
+        // Se a página atual estiver próxima do início
+        if (currentPage <= 3) {
+            pagesToShow.push(2, 3, '...', totalPages);
+        } 
+        // Se a página atual estiver próxima do fim
+        else if (currentPage >= totalPages - 2) {
+            pagesToShow.push('...', totalPages - 2, totalPages - 1, totalPages);
+        } 
+        // Se a página atual estiver no meio
+        else {
+            pagesToShow.push('...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
+        }
+    }
+
+    // Adicionar os números de página à paginação
+    let pageNumbersHTML = '';
+
+    for (let i = 0; i < pagesToShow.length; i++) {
+        if (pagesToShow[i] === '...') {
+            pageNumbersHTML += `<li class="page-item disabled page-number">
+                <span class="page-link">...</span>
+            </li>`;
+        } else {
+            const isActive = pagesToShow[i] === currentPage ? 'active' : '';
+            pageNumbersHTML += `<li class="page-item ${isActive} page-number">
+                <a class="page-link page-number-link" href="#" data-page="${pagesToShow[i]}">${pagesToShow[i]}</a>
+            </li>`;
+        }
+    }
+
+    // Inserir os números de página entre os botões de anterior e próximo
+    $(pageNumbersHTML).insertAfter('#prevPageItem');
+
+    // Adicionar evento de clique para os links de número de página
+    $('.page-number-link').on('click', function(e) {
+        e.preventDefault();
+        currentPage = parseInt($(this).data('page'));
+        atualizarExibicaoComPaginacao();
+    });
 }
 
 // Função para carregar todos os alunos da turma do professor
@@ -381,43 +562,11 @@ function carregarAlunosDaTurma() {
         return;
     }
 
-    // Limpar dados anteriores da tabela
-    $('table.tableRelatorio tbody').empty();
+    // Limpar o dropdown de seleção de jogo
+    $('#nomeJogo').val('');
 
-    // Usar o primeiro jogo da lista (Jogo da Memória - ID 2) para carregar os alunos inicialmente
-    const idJogoInicial = "2"; // ID do Jogo da Memória
-    console.log('ID do jogo inicial:', idJogoInicial);
-
-    const url = `${window.location.origin}/aluno/jogo/${idJogoInicial}/turma/${idTurmaProfessor}`;
-    console.log('URL da requisição:', url);
-
-    $.ajax({
-        type: 'GET',
-        url: url,
-        success: function (resposta) {
-            console.log('Resposta da requisição:', resposta);
-
-            if (resposta.resultados.length === 0) {
-                $('table.tableRelatorio tbody').append('<tr><td colspan="3">Nenhum aluno encontrado para esta turma</td></tr>');
-            } else {
-                for (let i = 0; i < resposta.resultados.length; i++) {
-                    console.log('Dados do aluno:', resposta.resultados[i]);
-                    const row = `<tr>
-                        <td>${resposta.resultados[i].nomealuno}</td>
-                        <td class="me-2">${resposta.resultados[i].nomejogo}</td>
-                        <td class="text-center">${resposta.resultados[i].pontos}</td>
-                    </tr>`;
-                    $('table.tableRelatorio tbody').append(row);
-                }
-                // Selecionar o jogo no dropdown
-                $('#nomeJogo').val(idJogoInicial);
-            }
-        },
-        error: function (resposta) {
-            console.error('Erro na requisição:', resposta);
-            $('table.tableRelatorio tbody').append('<tr><td colspan="3">Erro ao carregar alunos da turma</td></tr>');
-        }
-    });
+    // Carregar todos os jogos
+    carregarTodosJogos();
 }
 
 /*------------------------------------------------------------------------------------------------------- */
