@@ -15,14 +15,14 @@ const palavras = [
 ];
 
 const imagens = [
-    "../jogodamemoria/imgs/abacaxi.jpg",
-    "../jogodamemoria/imgs/coracao.jpg",
-    "../jogodamemoria/imgs/dado.jpg",
-    "../jogodamemoria/imgs/elefante.jpg",
-    "../jogodamemoria/imgs/fada.jpg",
-    "../jogodamemoria/imgs/lapis.jpg",
-    "../jogodamemoria/imgs/maca.jpg",
-    "../jogodamemoria/imgs/janela.jpg"
+    "../imagens-jogos/abacaxi.png",
+    "../imagens-jogos/coracao.png",
+    "../imagens-jogos/dado.png",
+    "../imagens-jogos/elefante.png",
+    "../imagens-jogos/fada.png",
+    "../imagens-jogos/lapis.png",
+    "../imagens-jogos/maca.png",
+    "../imagens-jogos/janela.png"
 ];
 
 // Dicas para cada palavra
@@ -44,6 +44,7 @@ let dicaAtual = "";
 let indiceAleatorio = 0;
 let letrasOcultas = [];
 let letrasAdivinhadas = []; // Posições das letras já adivinhadas
+let letrasErradas = []; // Letras digitadas que não estão na palavra
 let tentativas = 0;
 let pontos = 0;
 let jogoIniciado = false;
@@ -108,8 +109,12 @@ function iniciarJogo() {
     // Limpa o campo de entrada
     document.querySelector(".letraAcertar span").innerHTML = "";
 
-    // Reinicia as letras adivinhadas
+    // Reinicia as letras adivinhadas e erradas
     letrasAdivinhadas = [];
+    letrasErradas = [];
+    
+    // Limpa o display de letras erradas
+    document.getElementById("letrasErradas").innerHTML = "";
 
     // Cria os campos de entrada para as letras faltantes
     criarCamposEntrada();
@@ -244,8 +249,16 @@ function verificarResposta() {
         // Letra incorreta ou já foi adivinhada
         input.classList.add("incorreta");
         tentativas++;
+        
+        // Verifica se a letra já foi registrada como errada
+        if (!letrasErradas.includes(letraDigitada)) {
+            // Adiciona a letra à lista de letras erradas
+            letrasErradas.push(letraDigitada);
+            // Atualiza o display de letras erradas
+            atualizarLetrasErradas();
+        }
 
-        if (tentativas >= 3) {
+        if (tentativas >= 5) {
             // Após 5 tentativas, mostra a resposta correta
             mostrarRespostaCorreta();
         }
@@ -508,6 +521,20 @@ function mostrarDica() {
     }
 
     modal.style.display = "flex";
+}
+
+// Função para atualizar o display de letras erradas
+function atualizarLetrasErradas() {
+    const letrasErradasContainer = document.getElementById("letrasErradas");
+    letrasErradasContainer.innerHTML = "";
+    
+    // Adiciona cada letra errada ao container
+    for (let letra of letrasErradas) {
+        const letraSpan = document.createElement("span");
+        letraSpan.className = "letra-errada";
+        letraSpan.textContent = letra;
+        letrasErradasContainer.appendChild(letraSpan);
+    }
 }
 
 // Função para alternar o áudio

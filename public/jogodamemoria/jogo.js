@@ -8,14 +8,14 @@
 //Adicionando valores aos arrays
 
 let images = [
-    'imgs/abacaxi.jpg',
-    'imgs/coracao.jpg',
-    'imgs/dado.jpg',
-    'imgs/elefante.jpg',
-    'imgs/fada.jpg',
-    'imgs/lapis.jpg',
-    'imgs/maca.jpg',
-    'imgs/janela.jpg'
+    '../imagens-jogos/abacaxi.png',
+    '../imagens-jogos/coracao.png',
+    '../imagens-jogos/dado.png',
+    '../imagens-jogos/elefante.png',
+    '../imagens-jogos/fada.png',
+    '../imagens-jogos/lapis.png',
+    '../imagens-jogos/maca.png',
+    '../imagens-jogos/janela.png'
 ]
 let palavras = [
     'ABACAXI',

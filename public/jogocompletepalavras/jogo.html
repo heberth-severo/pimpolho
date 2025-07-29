@@ -61,19 +61,27 @@
 
         <section class="section_jogo">
 
-            <div class="jogoCompletePalavras" id="jogoPalavras">
-                <h1 class="titulo-jogo">Jogo Complete Palavras</h1>
-                <div class="imgWord">
-                    <img src="" alt="imagem ilustrativa do jogo" id="imgComplete">
+            <div class="container-jogo">
+                <div class="jogoCompletePalavras" id="jogoPalavras">
+                    <h1 class="titulo-jogo">Jogo Complete Palavras</h1>
+                    <div class="imgWord">
+                        <img src="" alt="imagem ilustrativa do jogo" id="imgComplete">
+                    </div>
+                    <div class="conjuntoPalavra">
+                        <span></span>
+                    </div>
+                    <div class="letraAcertar">
+                        <span></span>
+                    </div>
+                    <div class="dica-container">
+                        <button type="button" class="btn-dica" onclick="mostrarDica()">Quero uma dica!</button>
+                    </div>
                 </div>
-                <div class="conjuntoPalavra">
-                    <span></span>
-                </div>
-                <div class="letraAcertar">
-                    <span></span>
-                </div>
-                <div class="dica-container">
-                    <button type="button" class="btn-dica" onclick="mostrarDica()">Quero uma dica!</button>
+                <div class="letras-erradas-container">
+                    <h2 class="titulo-letras-erradas">Letras Erradas</h2>
+                    <div class="letras-erradas" id="letrasErradas">
+                        <!-- As letras erradas serão adicionadas aqui pelo JavaScript -->
+                    </div>
                 </div>
             </div>
         </section>
